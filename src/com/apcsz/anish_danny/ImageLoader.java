@@ -22,7 +22,7 @@ public class ImageLoader {
 			return storedImages.get(place);
 		else{
 			try{
-				URL location =  this.getClass().getClassLoader().getResource(place);
+				URL location =  this.getClass().getResource(place);
 				if(location == null)
 					System.exit(0);
 				

@@ -14,6 +14,7 @@ public class Game extends Canvas{
 	private JFrame frame;
 	private BufferStrategy strat;
 	private boolean stillPlaying;
+	private BGLoader bg;
 	
 	
 	public Game(){
@@ -35,6 +36,8 @@ public class Game extends Canvas{
 		this.createBufferStrategy(2);
 		strat = getBufferStrategy();
 		stillPlaying = true;
+		bg = new BGLoader();
+		repaint();
 	}
 
 	public static void main(String[] args) {
@@ -44,13 +47,14 @@ public class Game extends Canvas{
 
 	private void runGameLoop() {
 		long initLoop = System.currentTimeMillis();
-		//while(stillPlaying){
-			long change = initLoop - System.currentTimeMillis();
+		long change;
+		while(stillPlaying){
+			change = initLoop - System.currentTimeMillis();
 			initLoop = System.currentTimeMillis();
 			Graphics2D gfx = (Graphics2D) strat.getDrawGraphics();
 			BufferedImage sourceImage = ImageLoader.getImageLoader().getImage("resources/Untitled.jpg");
 			gfx.drawImage(sourceImage,0,0,null);
-		//}
+		}
 	}
 
 }
