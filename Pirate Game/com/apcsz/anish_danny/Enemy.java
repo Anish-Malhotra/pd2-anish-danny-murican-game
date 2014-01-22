@@ -7,7 +7,7 @@ public class Enemy extends Plane {
 	Random r = new Random();
 	
 	public Enemy(int maxHp, int damage, double xCor, double yCor, double speed, String ref) {
-		super(maxHp, damage, xCor, yCor, speed, ref);
+		super(maxHp, damage, xCor, yCor, speed, Constants.ENEMY_IMAGE);
 		Constants.ENEMIES.add(this);
 	}
 

@@ -6,7 +6,7 @@ public class Player extends Plane {
 	private static Player player = new Player();
 	
 	public Player() {
-		super(Constants.PLAYER_STARTING_HEALTH, Constants.PLAYER_STARTING_DAMAGE, Constants.GRID_X/2, 30, Constants.PLAYER_STARTING_SPEED, "resources/player.gif");
+		super(Constants.PLAYER_STARTING_HEALTH, Constants.PLAYER_STARTING_DAMAGE, Constants.GRID_X/2, 30, Constants.PLAYER_STARTING_SPEED, Constants.PLAYER_IMAGE);
 	}
 	
 	public void shoot() {

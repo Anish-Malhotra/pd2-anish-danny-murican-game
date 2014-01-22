@@ -52,13 +52,14 @@ public class Game extends Canvas{
 	}
 
 	public void initializeShips(){
-		for (int i=0; i<Constants.LEVEL*3; i++) {
+		int totalEnemies = Constants.LEVEL*3;
+		for (int i=0; i<totalEnemies; i++) {
 			int health = Constants.ENEMY_BASE_HEALTH * Constants.LEVEL;
 			int damage = Constants.ENEMY_BASE_DAMAGE * Constants.LEVEL;
 			int speed = Constants.ENEMY_BASE_MOVE_SPEED * Constants.LEVEL;
-			double xCoor = Constants.GRID_X / (Constants.LEVEL*3) * i;
+			double xCoor = Constants.GRID_X / totalEnemies * i + (Constants.GRID_X / totalEnemies / 2) - 15;
 			double yCoor = 50;
-			Enemy enemy = new Enemy(health, damage, xCoor, yCoor, speed, "resources/enemy.gif");
+			Enemy enemy = new Enemy(health, damage, xCoor, yCoor, speed, "resources/enemy.png");
 			Constants.ENEMIES.add(enemy);
 		}
 	}
@@ -99,7 +100,7 @@ public class Game extends Canvas{
 			initLoop = System.currentTimeMillis();
 			
 			Graphics2D gfx = (Graphics2D) strat.getDrawGraphics();
-			gfx.setColor(new Color(0,67,171));
+			//gfx.setColor(new Color(0,67,171));
 			gfx.fillRect(0, 0, Constants.GRID_X, Constants.GRID_Y);
 			for (int i=0; i<Constants.ENEMIES.size(); i++) {
 				Enemy ship = Constants.ENEMIES.get(i);
