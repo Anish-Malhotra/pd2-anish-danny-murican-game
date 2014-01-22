@@ -1,12 +1,12 @@
 package com.apcsz.anish_danny;
 
-public class Player extends Ship {
+public class Player extends Plane {
 	
 	Game g = new Game();
 	private static Player player = new Player();
 	
 	public Player() {
-		super(Constants.PLAYER_STARTING_HEALTH, Constants.PLAYER_STARTING_DAMAGE,35.0,300.0,31.0,"resources/player.gif");
+		super(Constants.PLAYER_STARTING_HEALTH, Constants.PLAYER_STARTING_DAMAGE, Constants.GRID_X/2, 30, Constants.PLAYER_STARTING_SPEED, "resources/player.gif");
 	}
 	
 	public void shoot() {
@@ -15,8 +15,7 @@ public class Player extends Ship {
 		double sliderResult = 10;
 		double cannonballXSpd = Constants.MAX_CANNONBALL_SPEED * Math.cos(angle * Math.PI / 180);
 		double cannonballYSpd = Constants.MAX_CANNONBALL_SPEED * Math.sin(angle * Math.PI / 180);
-		double cannonballZSpd = sliderResult;
-		Cannonball c = new Cannonball(this.getDamage(), this.getXCor(), this.getYCor(), cannonballXSpd, cannonballYSpd, cannonballZSpd);
+		Cannonball c = new Cannonball(this.getDamage(), this.getXCor(), this.getYCor(), cannonballXSpd, cannonballYSpd);
 	}
 
 	public void setSpeed(double spd) {
@@ -26,20 +25,20 @@ public class Player extends Ship {
 	public void move(long change) {
 		
 		//if we reached the top of the screen and are still trying to move
-		if ((speed < 0) && (yCor < 20)) {
+		if ((speed < 0) && (yCoor < 20)) {
 			return;
 		}
 		
 		//if we reached the bottom of the screen and are still trying to move
-		if ((speed > 0) && (yCor > 580)) {
+		if ((speed > 0) && (yCoor > 580)) {
 			return;
 		}
 		
-		yCor += (change * speed) / 1000;
+		yCoor += (change * speed) / 1000;
 		
 	}
 
-	public static Ship getPlayer() {
+	public static Plane getPlayer() {
 		return player;
 	}
 	

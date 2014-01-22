@@ -4,12 +4,14 @@ import java.util.ArrayList;
 
 public class Constants {
 
-	public static final int GRID_X = 101;
-	public static final int GRID_Y = 101;
-	public static final int FPS = 30;
+	public static final int GRID_X = 800;
+	public static final int GRID_Y = 600;
+	public static boolean STILL_PLAYING = true;
+	public static int LEVEL = 1;
 	
 	public static final int PLAYER_STARTING_HEALTH = 10;
 	public static final int PLAYER_STARTING_DAMAGE = 1;
+	public static final int PLAYER_STARTING_SPEED = 10;
 	public static double MAX_CANNONBALL_SPEED = 10;
 	
 	public static final int ENEMY_BASE_HEALTH = 1;

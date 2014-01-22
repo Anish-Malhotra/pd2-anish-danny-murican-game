@@ -2,19 +2,18 @@ package com.apcsz.anish_danny;
 
 import java.awt.Graphics;
 
-public abstract class Ship {
+public abstract class Plane {
 
 	private int maxHp, hp, damage;
-	protected double xCor, yCor;
+	protected double xCoor, yCoor;
 	protected double speed,ogSpeed;
 	private Sprite sprite;
 	
-	public Ship(int maxHp, int damage, double xCor, double yCor, double speed, String ref) {
+	public Plane(int maxHp, int damage, double xCoor, double yCoor, double speed, String ref) {
 		this.sprite = ImageLoader.getImageLoader().getSprite2(ref);
-		this.xCor = xCor;
-		this.yCor = yCor;
+		this.xCoor = xCoor;
+		this.yCoor = yCoor;
 		this.speed = speed;
-		this.ogSpeed = speed;
 		this.maxHp = maxHp;
 		this.hp = maxHp;
 		this.damage = damage;
@@ -40,14 +39,14 @@ public abstract class Ship {
 	}
 
 	public double getXCor() {
-		return xCor;
+		return xCoor;
 	}
 	
 	public double getYCor() {
-		return yCor;
+		return yCoor;
 	}
 	
-	public void draw(Graphics g){
-		sprite.draw(g,(int)xCor,(int)yCor);
+	public void draw(Graphics g) {
+		sprite.draw(g,(int)xCoor,(int)yCoor);
 	}
 }

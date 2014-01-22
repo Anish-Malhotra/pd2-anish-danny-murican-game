@@ -33,7 +33,7 @@ public class ImageLoader {
 			URL url = this.getClass().getClassLoader().getResource(ref);
 			
 			if (url == null) {
-				System.out.println("can't find file");
+				System.out.println("Can't find file");
 				System.exit(0);
 			}
 

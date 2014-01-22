@@ -2,22 +2,21 @@ package com.apcsz.anish_danny;
 
 import java.util.Random;
 
-public class Enemy extends Ship {
+public class Enemy extends Plane {
 
 	Random r = new Random();
 	
 	public Enemy(int maxHp, int damage, double xCor, double yCor, double speed, String ref) {
-		super(maxHp,damage,xCor,yCor,speed,ref);
+		super(maxHp, damage, xCor, yCor, speed, ref);
 		Constants.ENEMIES.add(this);
 	}
 
 	public void shoot() {
-		Ship target = Player.getPlayer();
+		Plane target = Player.getPlayer();
 		double distance = this.getYCor() - target.getYCor();
 		double cannonballYSpd = Constants.ENEMY_CANNONBALL_BASE_SPEED;
 		double time = distance / cannonballYSpd;
-		double requiredZSpd = 9.8 * time / 2;
-		Cannonball c = new Cannonball(this.getDamage(), this.getXCor(), this.getYCor(), 0, cannonballYSpd, requiredZSpd);
+		Cannonball c = new Cannonball(this.getDamage(), this.getXCor(), this.getYCor(), 0, cannonballYSpd);
 	}
 
 	public void move(long change) {
