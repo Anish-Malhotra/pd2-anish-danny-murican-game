@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Constants {
 
-	public static final int GRID_X = 800;
-	public static final int GRID_Y = 600;
+	public static final int GRID_X = 640;
+	public static final int GRID_Y = 480;
 	public static boolean STILL_PLAYING = true;
 	public static int LEVEL = 1;
 	
@@ -16,11 +16,8 @@ public class Constants {
 	
 	public static final int ENEMY_BASE_HEALTH = 1;
 	public static final int ENEMY_BASE_DAMAGE = 1;
-	public static final int ENEMY_BASE_MOVE_SPEED = 30;
+	public static final int ENEMY_BASE_MOVE_SPEED = 1;
 	public static final double ENEMY_CANNONBALL_BASE_SPEED = 1;
-	
-	public static final String ENEMY_IMAGE = "resources/enemy.png";
-	public static final String PLAYER_IMAGE = "resources/player.gif";
 	
 	public static ArrayList<Enemy> ENEMIES = new ArrayList<Enemy>();
 	public static ArrayList<Cannonball> CANNONBALLS = new ArrayList<Cannonball>();

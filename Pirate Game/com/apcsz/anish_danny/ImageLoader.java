@@ -1,12 +1,7 @@
 package com.apcsz.anish_danny;
 
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsEnvironment;
-import java.awt.Image;
-import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 
 import javax.imageio.ImageIO;
@@ -15,41 +10,30 @@ import javax.imageio.ImageIO;
 
 public class ImageLoader {
 	
-	private HashMap<String,Sprite> storedstoredSprites = new HashMap<String,Sprite>();
+	private HashMap<String,BufferedImage> storedstoredSprites = new HashMap<String,BufferedImage>();
 	private static ImageLoader single = new ImageLoader();
 	
 	public static ImageLoader getImageLoader() {
 		return single;
 	}
 
-	public Sprite getSprite2(String ref) {
+	public BufferedImage getImage(String ref) {
 		if (storedstoredSprites.get(ref) != null) {
-			return (Sprite) storedstoredSprites.get(ref);
+			return storedstoredSprites.get(ref);
 		}
 		
 		BufferedImage sourceImage = null;
 		
 		try {
-			URL url = this.getClass().getClassLoader().getResource(ref);
-			
-			if (url == null) {
-				System.out.println("Can't find file");
-				System.exit(0);
-			}
-
-			sourceImage = ImageIO.read(url);
+			sourceImage = ImageIO.read(Game.class.getResourceAsStream(ref));
 		} catch (IOException e) {
+			System.out.println("Can't find file");
+			System.exit(0);
 		}
-
-		GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
-		Image image = gc.createCompatibleImage(sourceImage.getWidth(),sourceImage.getHeight(),Transparency.BITMASK);
-
-		image.getGraphics().drawImage(sourceImage,0,0,null);
-
-		Sprite sprite = new Sprite(image);
-		storedstoredSprites.put(ref,sprite);
 		
-		return sprite;
+		storedstoredSprites.put(ref,sourceImage);
+		
+		return sourceImage;
 	}
 	
 }

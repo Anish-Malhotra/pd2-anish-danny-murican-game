@@ -2,11 +2,10 @@ package com.apcsz.anish_danny;
 
 public class Player extends Plane {
 	
-	Game g = new Game();
 	private static Player player = new Player();
 	
 	public Player() {
-		super(Constants.PLAYER_STARTING_HEALTH, Constants.PLAYER_STARTING_DAMAGE, Constants.GRID_X/2, 30, Constants.PLAYER_STARTING_SPEED, Constants.PLAYER_IMAGE);
+		super(Constants.PLAYER_STARTING_HEALTH, Constants.PLAYER_STARTING_DAMAGE, 32, 224, Constants.PLAYER_STARTING_SPEED, "/resources/player.png");
 	}
 	
 	public void shoot() {
@@ -18,6 +17,10 @@ public class Player extends Plane {
 		Cannonball c = new Cannonball(this.getDamage(), this.getXCor(), this.getYCor(), cannonballXSpd, cannonballYSpd);
 	}
 
+	public void update(long timeElapsed){
+		//will implement soon
+	}
+	
 	public void setSpeed(double spd) {
 		speed = spd;
 	}
@@ -34,11 +37,11 @@ public class Player extends Plane {
 			return;
 		}
 		
-		yCoor += (change * speed) / 1000;
+		yCoor += (change * speed) / 1e9;
 		
 	}
 
-	public static Plane getPlayer() {
+	public static Player getPlayer() {
 		return player;
 	}
 	

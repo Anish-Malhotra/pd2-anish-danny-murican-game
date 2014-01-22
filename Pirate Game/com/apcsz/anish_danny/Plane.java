@@ -1,16 +1,20 @@
 package com.apcsz.anish_danny;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 public abstract class Plane {
 
 	private int maxHp, hp, damage;
 	protected double xCoor, yCoor;
 	protected double speed,ogSpeed;
-	private Sprite sprite;
+	protected Rectangle bounds;
+	private BufferedImage sprite;
 	
 	public Plane(int maxHp, int damage, double xCoor, double yCoor, double speed, String ref) {
-		this.sprite = ImageLoader.getImageLoader().getSprite2(ref);
+		this.sprite = ImageLoader.getImageLoader().getImage(ref);
+		bounds = new Rectangle((int)xCoor,(int)yCoor,sprite.getWidth(),sprite.getHeight());
 		this.xCoor = xCoor;
 		this.yCoor = yCoor;
 		this.speed = speed;
@@ -20,7 +24,7 @@ public abstract class Plane {
 	}
 	
 	abstract public void shoot();
-	abstract public void move(long change);
+	abstract public void update(long elapsedTime);
 	
 	public void loseHp(int amount) {
 		hp -= amount;
@@ -47,6 +51,6 @@ public abstract class Plane {
 	}
 	
 	public void draw(Graphics g) {
-		sprite.draw(g,(int)xCoor,(int)yCoor);
+		g.drawImage(sprite,(int)xCoor,(int)yCoor,null);
 	}
 }
