@@ -5,8 +5,6 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
@@ -18,7 +16,7 @@ public class Game extends Canvas{
 	
 	private JFrame frame;
 	private BufferStrategy strat;
-	private boolean leftPressed, rightPressed, firePressed;
+	private boolean leftPressed, rightPressed, upPressed, downPressed, spacePressed;
 	private String message = "";
 	private boolean waitingForKeyPress;
 	private BufferedImage bg;
@@ -42,33 +40,32 @@ public class Game extends Canvas{
 		this.createBufferStrategy(2);
 		strat = getBufferStrategy();
 		Constants.STILL_PLAYING = true;
-		initializePlanes();
+		initializeEnemies();
 		leftPressed = false;
 		rightPressed = false;
-		firePressed = false;
+		spacePressed = false;
 		addKeyListener(new KeyListener());
-		bg = ImageLoader.getImageLoader().getImage("/resources/bg.png");
+		bg = ImageLoader.getImageLoader().getImage(Constants.BG_IMAGE);
 		player = Player.getPlayer();
 	}
 
-	public void initializePlanes(){
-		for (int i=0; i<Constants.LEVEL*3; i++) {
+	public void initializeEnemies() {
+		int totalEnemies = Constants.LEVEL * 3;
+		for (int i=0; i<totalEnemies; i++) {
 			int health = Constants.ENEMY_BASE_HEALTH * Constants.LEVEL;
 			int damage = Constants.ENEMY_BASE_DAMAGE * Constants.LEVEL;
 			int speed = Constants.ENEMY_BASE_MOVE_SPEED * Constants.LEVEL;
-			double xCoor = 586.0;
-			double yCoor = (480/((Constants.LEVEL * 3) + 2)) + ((480/((Constants.LEVEL * 3) + 2)) * i) - 16;
-			Enemy enemy = new Enemy(health, damage, xCoor, yCoor, speed, "/resources/enemy.png");
+			double xCoor = Constants.GRID_X - 50;
+			double yCoor = Constants.GRID_Y / totalEnemies / 2 + Constants.GRID_Y / totalEnemies * i - 20;
+			Enemy enemy = new Enemy(health, damage, xCoor, yCoor, speed);
 			Constants.ENEMIES.add(enemy);
 		}
 	}
 	
 	private void startGame() {
 		Constants.ENEMIES.clear();
-		initializePlanes();
-		leftPressed = false;
-		rightPressed = false;
-		firePressed = false;
+		initializeEnemies();
+		leftPressed = rightPressed = upPressed = downPressed = spacePressed = false;
 	}
 	
 	public void notifyEnemyDestroyed(Enemy enemy){
@@ -118,18 +115,23 @@ public class Game extends Canvas{
 	
 	private class KeyListener extends KeyAdapter {
 		
-		public void keyPressed(KeyEvent event) {
-			if (event.getKeyCode() == KeyEvent.VK_LEFT) {
+		public void keyPressed(KeyEvent e) {
+			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 				leftPressed = true;
 			}
-			if (event.getKeyCode() == KeyEvent.VK_RIGHT) {
+			if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 				rightPressed = true;
 			}
-			if (event.getKeyCode() == KeyEvent.VK_SPACE) {
-				firePressed = true;
+			if (e.getKeyCode() == KeyEvent.VK_UP) {
+				upPressed = true;
+			}
+			if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+				downPressed = true;
+			}
+			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+				spacePressed = true;
 			}
 		} 
-			
 			
 		public void keyReleased(KeyEvent e) {			
 			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -138,8 +140,14 @@ public class Game extends Canvas{
 			if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 				rightPressed = false;
 			}
+			if (e.getKeyCode() == KeyEvent.VK_UP) {
+				upPressed = true;
+			}
+			if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+				downPressed = true;
+			}
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-				firePressed = false;
+				spacePressed = false;
 			}
 		}
 

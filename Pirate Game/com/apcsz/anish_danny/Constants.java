@@ -19,6 +19,10 @@ public class Constants {
 	public static final int ENEMY_BASE_MOVE_SPEED = 1;
 	public static final double ENEMY_CANNONBALL_BASE_SPEED = 1;
 	
+	public static final String ENEMY_IMAGE = "/resources/enemy.png";
+	public static final String PLAYER_IMAGE = "/resources/player.png";
+	public static final String BG_IMAGE = "/resources/bg.png";
+	
 	public static ArrayList<Enemy> ENEMIES = new ArrayList<Enemy>();
 	public static ArrayList<Cannonball> CANNONBALLS = new ArrayList<Cannonball>();
 	
