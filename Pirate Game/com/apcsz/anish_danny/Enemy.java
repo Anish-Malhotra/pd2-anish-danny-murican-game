@@ -22,13 +22,21 @@ public class Enemy extends Plane {
 		angle++;
 	}
 	
-	public void shoot() {
-		//need to fix implementation for this
-		Player target = Player.getPlayer();
-		double distance = this.getYCor() - target.getYCor();
-		double cannonballYSpd = Constants.ENEMY_CANNONBALL_BASE_SPEED;
-		double time = distance / cannonballYSpd;
-		Cannonball c = new Cannonball(this.getDamage(), this.getXCor(), this.getYCor(), 0, cannonballYSpd);
+	public void shoot(){
+		int check = r.nextInt(100);
+		if(check < 30){
+			Cannonball c = new Cannonball(this.getDamage(), this.xCoor, this.yCoor, this.speed, Constants.ENEMY_CANNONBALL_IMAGE, false);
+			Constants.ENEMY_CANNONBALLS.add(c);
+		}
 	}
-
+	
+	public void collidedWith(Plane other) {
+		//kamikaze pilot dies if he crashes into the player
+		Constants.ENEMIES.remove(this);
+	}
+	
+	public void collidedWith(Cannonball other) {
+		this.loseHp(other.getDamage());
+	}
+	
 }

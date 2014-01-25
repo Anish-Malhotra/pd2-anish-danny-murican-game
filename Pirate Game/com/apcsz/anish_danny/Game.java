@@ -16,11 +16,14 @@ public class Game extends Canvas{
 	
 	private JFrame frame;
 	private BufferStrategy strat;
-	private boolean leftPressed, rightPressed, upPressed, downPressed, spacePressed;
 	private String message = "";
 	private boolean waitingForKeyPress;
 	private BufferedImage bg;
+	protected static boolean leftPressed, rightPressed, upPressed, downPressed, spacePressed;
+	protected static long firingInterval = 450;
+	private long lastFire = 0;
 	Player player;
+
 	
 	public Game(){
 		frame = new JFrame("MURICAN Game!");
@@ -54,7 +57,7 @@ public class Game extends Canvas{
 		for (int i=0; i<totalEnemies; i++) {
 			int health = Constants.ENEMY_BASE_HEALTH * Constants.LEVEL;
 			int damage = Constants.ENEMY_BASE_DAMAGE * Constants.LEVEL;
-			int speed = Constants.ENEMY_BASE_MOVE_SPEED * Constants.LEVEL;
+			double speed = Constants.ENEMY_BASE_MOVE_SPEED * Constants.LEVEL;
 			double xCoor = Constants.GRID_X - 50;
 			double yCoor = Constants.GRID_Y / totalEnemies / 2 + Constants.GRID_Y / totalEnemies * i - 20;
 			Enemy enemy = new Enemy(health, damage, xCoor, yCoor, speed);
@@ -82,7 +85,44 @@ public class Game extends Canvas{
 			message = "Wave " + Constants.LEVEL + " Completed.";
 		}
 	}
-
+	
+	public void shoot() {
+		if(Game.spacePressed){
+			if (System.currentTimeMillis() - lastFire < firingInterval) {
+				return;
+			}
+			lastFire = System.currentTimeMillis();
+			Cannonball c = new Cannonball(player.getDamage(), player.getXCoor(), player.getYCoor(), Constants.PLAYER_CANNONBALL_BASE_SPEED, Constants.PLAYER_CANNONBALL_IMAGE,true);
+			Constants.PLAYER_CANNONBALLS.add(c);
+		}
+	}
+	
+	public void collisionDetection(){
+		Plane p = (Plane) player;
+		for(int i=0;i<Constants.ENEMIES.size();i++){
+			Plane enemy = (Plane) Constants.ENEMIES.get(i);
+			if(p.collidesWith(enemy)){
+				p.collidedWith(enemy);
+				enemy.collidedWith(p);
+			}
+		}
+		for(Cannonball c:Constants.ENEMY_CANNONBALLS){
+			if(p.collidesWith(c)){
+				p.collidedWith(c);
+				c.collidedWith(p);
+			}
+		}
+		for(int i=0;i<Constants.ENEMIES.size();i++){
+			for(Cannonball c:Constants.PLAYER_CANNONBALLS){
+				Plane enemy = (Plane) Constants.ENEMIES.get(i);
+				if(enemy.collidesWith(c)){
+					enemy.collidedWith(c);
+					c.collidedWith(enemy);
+				}
+			}
+		}
+	}
+	
 	public static void main(String[] args) {
 		Game g = new Game();
 		g.runGameLoop();
@@ -99,12 +139,30 @@ public class Game extends Canvas{
 			gfx.fillRect(0, 0, Constants.GRID_X, Constants.GRID_Y);
 			gfx.drawImage(bg,0,0,null);
 			for (int i=0; i<Constants.ENEMIES.size(); i++) {
-				Enemy plane = Constants.ENEMIES.get(i);
-				plane.update(change);
-				plane.draw(gfx);
+				Enemy e = Constants.ENEMIES.get(i);
+				e.update(change);
+				e.draw(gfx);
+			}
+			for(Cannonball c:Constants.PLAYER_CANNONBALLS){
+				c.update(change);
+				c.draw(gfx);
+			}
+			for(Cannonball c:Constants.ENEMY_CANNONBALLS){
+				c.update(change);
+				c.draw(gfx);
 			}
 			player.update(change);
 			player.draw(gfx);
+			
+			if(spacePressed){
+				shoot();
+			}
+			
+			collisionDetection();
+			
+			if(player.getHp() == 0){
+				System.exit(0);
+			}
 			
 			gfx.dispose();
 			strat.show();
@@ -141,10 +199,10 @@ public class Game extends Canvas{
 				rightPressed = false;
 			}
 			if (e.getKeyCode() == KeyEvent.VK_UP) {
-				upPressed = true;
+				upPressed = false;
 			}
 			if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-				downPressed = true;
+				downPressed = false;
 			}
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				spacePressed = false;

@@ -7,10 +7,10 @@ import java.awt.image.BufferedImage;
 public abstract class Plane {
 
 	private int maxHp, hp, damage;
-	protected double xCoor, yCoor;
+	protected double xCoor,yCoor;
 	protected double speed,ogSpeed;
 	protected Rectangle bounds;
-	private BufferedImage sprite;
+	protected BufferedImage sprite;
 	
 	public Plane(int maxHp, int damage, double xCoor, double yCoor, double speed, String ref) {
 		this.sprite = ImageLoader.getImageLoader().getImage(ref);
@@ -23,8 +23,9 @@ public abstract class Plane {
 		this.damage = damage;
 	}
 	
-	abstract public void shoot();
 	abstract public void update(long elapsedTime);
+	abstract void collidedWith(Plane other);
+	abstract void collidedWith(Cannonball other);
 	
 	public void loseHp(int amount) {
 		hp -= amount;
@@ -42,15 +43,27 @@ public abstract class Plane {
 		return damage;
 	}
 
-	public double getXCor() {
+	public double getXCoor() {
 		return xCoor;
 	}
 	
-	public double getYCor() {
+	public double getYCoor() {
 		return yCoor;
 	}
 	
 	public void draw(Graphics g) {
 		g.drawImage(sprite,(int)xCoor,(int)yCoor,null);
+	}
+	
+	public boolean collidesWith(Plane other) {
+		this.bounds.setBounds((int)xCoor,(int)yCoor,sprite.getWidth(),sprite.getHeight());
+		other.bounds.setBounds((int)other.getXCoor(),(int)other.getYCoor(),other.sprite.getWidth(),other.sprite.getHeight());
+		return bounds.intersects(other.bounds);
+	}
+	
+	public boolean collidesWith(Cannonball other) {
+		this.bounds.setBounds((int)xCoor,(int)yCoor,sprite.getWidth(),sprite.getHeight());
+		other.bounds.setBounds((int)other.getXCoor(),(int)other.getYCoor(),other.sprite.getWidth(),other.sprite.getHeight());
+		return bounds.intersects(other.bounds);
 	}
 }

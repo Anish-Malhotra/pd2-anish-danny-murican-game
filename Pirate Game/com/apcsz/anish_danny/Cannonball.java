@@ -1,33 +1,41 @@
 package com.apcsz.anish_danny;
 
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+
 public class Cannonball {
 	
 	private int damage;
-	private double xCoor, yCoor, xSpd, ySpd;
+	private double xCoor, yCoor, speed;
+	private boolean playerShot;
+	protected BufferedImage sprite;
+	protected Rectangle bounds;
 
-	public Cannonball(int damage, double xCoor, double yCoor, double xSpd, double ySpd) {
+	public Cannonball(int damage, double xCoor, double yCoor, double xSpd, String ref, boolean playerShot) {
+		this.sprite = ImageLoader.getImageLoader().getImage(ref);
 		this.damage = damage;
 		this.xCoor = xCoor;
 		this.yCoor = yCoor;
-		this.xSpd = xSpd;
-		this.ySpd = ySpd;
-		Constants.CANNONBALLS.add(this);
+		this.speed = xSpd;
+		this.playerShot = playerShot;
 	}
 	
 	/* Return is so that you know if the cannonball moved successfully.
 	 * If not, then it'll return false and you can destroy the object */
-	public boolean move() {
-		if (xCoor + xSpd > Constants.GRID_X / 2 || xCoor + xSpd < Constants.GRID_X || 
-			yCoor + ySpd > Constants.GRID_Y / 2 || yCoor + ySpd < Constants.GRID_Y / -2) {
-			 return false;
-		}
-		else {
-			xCoor += xSpd;
-			yCoor += ySpd;
-			return true;
-		}
+	public void update(long elapsedTime) {
+		if(xCoor > (Constants.GRID_X+30))
+			Constants.PLAYER_CANNONBALLS.remove(this);
+		else if(xCoor < -30)
+			Constants.ENEMY_CANNONBALLS.remove(this);
+		else
+			xCoor += (elapsedTime * speed) / 1e9;			
 	}
 
+	public void draw(Graphics g) {
+		g.drawImage(sprite,(int)xCoor,(int)yCoor,null);
+	}
+	
 	public int getDamage() {
 		return damage;
 	}
@@ -38,6 +46,21 @@ public class Cannonball {
 	
 	public double getYCoor() {
 		return yCoor;
+	}
+	
+	public boolean collidesWith(Plane other) {
+		this.bounds.setBounds((int)xCoor,(int)yCoor,sprite.getWidth(),sprite.getHeight());
+		other.bounds.setBounds((int)other.getXCoor(),(int)other.getYCoor(),other.sprite.getWidth(),other.sprite.getHeight());
+		return bounds.intersects(other.bounds);
+	}
+	
+	public void collidedWith(Plane other) {
+		if(playerShot){
+			Constants.PLAYER_CANNONBALLS.remove(this);
+		}
+		else{
+			Constants.ENEMY_CANNONBALLS.remove(this);
+		}
 	}
 	
 }
