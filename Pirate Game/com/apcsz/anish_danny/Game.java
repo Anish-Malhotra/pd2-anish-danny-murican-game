@@ -9,40 +9,68 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SpringLayout;
+import javax.swing.SwingUtilities;
 
 @SuppressWarnings("serial")
 public class Game extends Canvas{
 	
 	public static Game g;
-	private JFrame frame;
+	private JFrame gameFrame;
+	private JFrame statsFrame;
 	private BufferStrategy strat;
 	private String message = "";
 	private BufferedImage bg;
 	protected boolean leftPressed, rightPressed, upPressed, downPressed, spacePressed;
 	Player player;
 	
+	public static void main(String[] args) {
+		getGame().runGameLoop();
+	}
+	
 	public Game(){
-		frame = new JFrame("MURICAN Game!");
-		JPanel panel = (JPanel) frame.getContentPane();
-		
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		panel.setPreferredSize(new Dimension(Constants.GRID_X-10, Constants.GRID_Y-10));
-		panel.setLayout(null);
-		panel.add(this);
+		gameFrame = new JFrame("MURICAN Game!");
+		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JPanel gamePanel = (JPanel) gameFrame.getContentPane();
+		gamePanel.setPreferredSize(new Dimension(Constants.GRID_X, Constants.GRID_Y));
+		gamePanel.setLayout(null);
+		gamePanel.add(this);
 		setBounds(0,0,Constants.GRID_X,Constants.GRID_Y);
 		setIgnoreRepaint(true);
-		frame.pack();
-		frame.setResizable(false);
-		frame.setVisible(true);
+		gameFrame.pack();
+		gameFrame.setResizable(false);
 		this.createBufferStrategy(2);
 		strat = getBufferStrategy();
-		initializeEnemies();
+		
+initializeEnemies();
 		leftPressed = rightPressed = upPressed = downPressed = spacePressed = false;
 		addKeyListener(new KeyListener());
 		bg = ImageLoader.getImageLoader().getImage(Constants.BG_IMAGE);
 		player = Player.getPlayer();
+		
+		statsFrame = new JFrame("YO STATS");
+		statsFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		JPanel statsPanel = (JPanel) statsFrame.getContentPane();
+		SpringLayout layout = new SpringLayout();
+		statsPanel.setLayout(layout);
+		for (int i=0; i<Constants.STATS.length; i++) {
+			statsPanel.add(new JLabel((String) Constants.STATS[i][0], JLabel.TRAILING));
+			JLabel value = new JLabel(Integer.toString((Integer) Constants.STATS[i][1]));
+			statsPanel.add(value);
+			Constants.STATS_LABELS.add(value);
+		}
+		SpringUtilities.makeCompactGrid(statsPanel,
+                Constants.STATS.length, 2, //rows, cols
+                15, 6,        //initX, initY
+                15, 6);       //xPad, yPad
+		statsFrame.setBounds(0,0,statsPanel.getWidth(), statsPanel.getHeight());
+		statsFrame.pack();
+		statsFrame.setLocation(Constants.GRID_X+10, 0);
+		
+		statsFrame.setVisible(true);
+		gameFrame.setVisible(true);
 	}
 	
 	public static Game getGame() {
@@ -73,8 +101,15 @@ public class Game extends Canvas{
 			message = "Wave " + Constants.LEVEL + " Completed.";
 		}
 	}
-	public static void main(String[] args) {
-		getGame().runGameLoop();
+	
+	private void updateStats() {
+		if (Constants.STATS.length != 6) {System.out.println("Please update the stats!");}
+		Constants.STATS[0][1] = player.getMaxHp();
+		Constants.STATS[1][1] = player.getHp();
+		Constants.STATS[2][1] = player.getDamage();
+		Constants.STATS[3][1] = (int) player.getXCoor();
+		Constants.STATS[4][1] = (int) player.getYCoor();
+		Constants.STATS[5][1] = Constants.ENEMIES.size();
 	}
 
 	private void runGameLoop() {
@@ -118,6 +153,11 @@ public class Game extends Canvas{
 			
 			gfx.dispose();
 			strat.show();
+			
+			updateStats();
+			for (int i=0; i<Constants.STATS.length; i++) {
+				Constants.STATS_LABELS.get(i).setText(Integer.toString((Integer) Constants.STATS[i][1]));
+			}
 
 			try { Thread.sleep(10); } catch (Exception e) {}
 		}

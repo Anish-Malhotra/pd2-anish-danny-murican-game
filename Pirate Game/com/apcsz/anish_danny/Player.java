@@ -21,13 +21,13 @@ public class Player extends Plane {
 		if (Game.getGame().upPressed && !(yCoor <= 0)) {
 			yCoor -= (timeElapsed * speed) / 1e3;
 		}
-		if (Game.getGame().downPressed && !(yCoor > Constants.GRID_Y-sprite.getHeight()-12)) {
+		if (Game.getGame().downPressed && !(yCoor > Constants.GRID_Y-sprite.getHeight())) {
 			yCoor += (timeElapsed * speed) / 1e3;
 		}
 		if (Game.getGame().leftPressed && !(xCoor <= 0)) {
 			xCoor -= (timeElapsed * speed) / 1e3;
 		}
-		if (Game.getGame().rightPressed && !(xCoor > Constants.GRID_X-sprite.getWidth()-10)) {
+		if (Game.getGame().rightPressed && !(xCoor > Constants.GRID_X-sprite.getWidth())) {
 			xCoor += (timeElapsed * speed) / 1e3;
 		}
 	}
@@ -36,7 +36,6 @@ public class Player extends Plane {
 		if (Game.getGame().spacePressed && !(System.currentTimeMillis() - lastFire < Constants.PLAYER_FIRING_INTERVAL)) {
 			lastFire = System.currentTimeMillis();
 			PlayerMissile m = new PlayerMissile(this.getDamage(), this.getXCoor(), this.getYCoor()+sprite.getHeight()/2);
-			Constants.MISSILES.add(m);
 		}
 	}
 

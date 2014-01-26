@@ -1,6 +1,7 @@
 package com.apcsz.anish_danny;
 
 import java.util.ArrayList;
+import javax.swing.JLabel;
 
 public class Constants {
 
@@ -15,7 +16,7 @@ public class Constants {
 	public static int PLAYER_FIRING_INTERVAL = 450;
 	public static double PLAYER_MISSILE_SPEED = 256;
 	
-	public static final int ENEMY_BASE_HEALTH = 1;
+	public static final int ENEMY_BASE_HEALTH = 10;
 	public static final int ENEMY_BASE_DAMAGE = 1;
 	public static final double ENEMY_BASE_MOVE_SPEED = .75;
 	public static final double ENEMY_MISSILE_BASE_SPEED = -256;
@@ -28,5 +29,16 @@ public class Constants {
 	
 	public static ArrayList<Enemy> ENEMIES = new ArrayList<Enemy>();
 	public static ArrayList<Missile> MISSILES = new ArrayList<Missile>();
+	
+	static Player player = Player.getPlayer();
+	public static Object[][] STATS = {
+		{"Max HP: ", player.getMaxHp()},
+		{"Current HP: ", player.getHp()},
+		{"Damage: ", player.getDamage()},
+		{"X Coor: ", (int) player.getXCoor()},
+		{"Y Coor: ", (int) player.getYCoor()},
+		{"Enemies: ", ENEMIES.size()}
+	};
+	public static ArrayList<JLabel> STATS_LABELS = new ArrayList<JLabel>();
 	
 }

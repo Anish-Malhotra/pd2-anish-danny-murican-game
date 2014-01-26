@@ -9,6 +9,7 @@ public abstract class Missile extends Entity {
 		super(damage, xCoor, yCoor, spd, imageRef);
 		width = sprite.getWidth();
 		height = sprite.getHeight();
+		Constants.MISSILES.add(this);
 	}
 
 	public void update(long elapsedTime) {

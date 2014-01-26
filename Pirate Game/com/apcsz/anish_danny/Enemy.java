@@ -28,7 +28,6 @@ public class Enemy extends Plane {
 		int check = r.nextInt(100);
 		if (check < shootFreq) {
 			EnemyMissile m = new EnemyMissile(this.getDamage(), this.xCoor, this.yCoor+sprite.getHeight()/2);
-			Constants.MISSILES.add(m);
 		}
 	}
 	
@@ -37,7 +36,6 @@ public class Enemy extends Plane {
 			if (other instanceof PlayerMissile) {
 				loseHp(other.getDamage());
 				if (getHp() <= 0) {
-					System.out.println(getHp());
 					destroy();
 				}
 				other.destroy();
