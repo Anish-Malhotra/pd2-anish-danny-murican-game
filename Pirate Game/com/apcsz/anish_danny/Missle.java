@@ -4,7 +4,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-public class Cannonball {
+public class Missle {
 	
 	private int damage;
 	private double xCoor, yCoor, speed;
@@ -12,8 +12,9 @@ public class Cannonball {
 	protected BufferedImage sprite;
 	protected Rectangle bounds;
 
-	public Cannonball(int damage, double xCoor, double yCoor, double xSpd, String ref, boolean playerShot) {
+	public Missle(int damage, double xCoor, double yCoor, double xSpd, String ref, boolean playerShot) {
 		this.sprite = ImageLoader.getImageLoader().getImage(ref);
+		bounds = new Rectangle((int)xCoor,(int)yCoor,sprite.getWidth(),sprite.getHeight());
 		this.damage = damage;
 		this.xCoor = xCoor;
 		this.yCoor = yCoor;
@@ -25,9 +26,9 @@ public class Cannonball {
 	 * If not, then it'll return false and you can destroy the object */
 	public void update(long elapsedTime) {
 		if(xCoor > (Constants.GRID_X+30))
-			Constants.PLAYER_CANNONBALLS.remove(this);
+			Constants.PLAYER_MISSLES.remove(this);
 		else if(xCoor < -30)
-			Constants.ENEMY_CANNONBALLS.remove(this);
+			Constants.ENEMY_MISSLES.remove(this);
 		else
 			xCoor += (elapsedTime * speed) / 1e9;			
 	}
@@ -56,10 +57,10 @@ public class Cannonball {
 	
 	public void collidedWith(Plane other) {
 		if(playerShot){
-			Constants.PLAYER_CANNONBALLS.remove(this);
+			Constants.PLAYER_MISSLES.remove(this);
 		}
 		else{
-			Constants.ENEMY_CANNONBALLS.remove(this);
+			Constants.ENEMY_MISSLES.remove(this);
 		}
 	}
 	

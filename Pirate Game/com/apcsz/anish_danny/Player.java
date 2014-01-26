@@ -13,25 +13,25 @@ public class Player extends Plane {
 	}
 		
 	public void update(long timeElapsed) {
-		if(Game.upPressed){
-			if ((yCoor < 8)) 
-				return;
-			yCoor -= (timeElapsed * speed) / 1e9;
+		if (Game.upPressed) {
+			if (!(yCoor <= 0)) {
+				yCoor -= (timeElapsed * speed) / 1e9;
+			}
 		}
-		else if(Game.downPressed){
-			if (yCoor > (Constants.GRID_Y-40))
-				return;
-			yCoor += (timeElapsed * speed) / 1e9;
+		if (Game.downPressed) {
+			if (!(yCoor > Constants.GRID_Y-40)) {
+				yCoor += (timeElapsed * speed) / 1e9;
+			}
 		}
-		else if(Game.leftPressed){
-			if(xCoor < 8)
-				return;
-			xCoor -= (timeElapsed * speed) / 1e9;
+		if (Game.leftPressed) {
+			if (!(xCoor <= 0)) {
+				xCoor -= (timeElapsed * speed) / 1e9;
+			}
 		}
-		else if(Game.rightPressed){
-			if(xCoor > (Constants.GRID_X-40))
-				return;
-			xCoor += (timeElapsed * speed) / 1e9;			
+		if (Game.rightPressed) {
+			if (!(xCoor > Constants.GRID_X-40)) {
+				xCoor += (timeElapsed * speed) / 1e9;
+			}
 		}
 	}
 
@@ -48,7 +48,7 @@ public class Player extends Plane {
 		}
 	}
 	
-	public void collidedWith(Cannonball other) {
+	public void collidedWith(Missle other) {
 		this.loseHp(other.getDamage());
 	}
 	

@@ -25,8 +25,8 @@ public class Enemy extends Plane {
 	public void shoot(){
 		int check = r.nextInt(100);
 		if(check < 30){
-			Cannonball c = new Cannonball(this.getDamage(), this.xCoor, this.yCoor, this.speed, Constants.ENEMY_CANNONBALL_IMAGE, false);
-			Constants.ENEMY_CANNONBALLS.add(c);
+			Missle c = new Missle(this.getDamage(), this.xCoor, this.yCoor, this.speed, Constants.ENEMY_MISSLE_IMAGE, false);
+			Constants.ENEMY_MISSLES.add(c);
 		}
 	}
 	
@@ -35,7 +35,7 @@ public class Enemy extends Plane {
 		Constants.ENEMIES.remove(this);
 	}
 	
-	public void collidedWith(Cannonball other) {
+	public void collidedWith(Missle other) {
 		this.loseHp(other.getDamage());
 	}
 	

@@ -17,7 +17,6 @@ public class Game extends Canvas{
 	private JFrame frame;
 	private BufferStrategy strat;
 	private String message = "";
-	private boolean waitingForKeyPress;
 	private BufferedImage bg;
 	protected static boolean leftPressed, rightPressed, upPressed, downPressed, spacePressed;
 	protected static long firingInterval = 450;
@@ -44,9 +43,7 @@ public class Game extends Canvas{
 		strat = getBufferStrategy();
 		Constants.STILL_PLAYING = true;
 		initializeEnemies();
-		leftPressed = false;
-		rightPressed = false;
-		spacePressed = false;
+		leftPressed = rightPressed = upPressed = downPressed = spacePressed = false;
 		addKeyListener(new KeyListener());
 		bg = ImageLoader.getImageLoader().getImage(Constants.BG_IMAGE);
 		player = Player.getPlayer();
@@ -92,30 +89,32 @@ public class Game extends Canvas{
 				return;
 			}
 			lastFire = System.currentTimeMillis();
-			Cannonball c = new Cannonball(player.getDamage(), player.getXCoor(), player.getYCoor(), Constants.PLAYER_CANNONBALL_BASE_SPEED, Constants.PLAYER_CANNONBALL_IMAGE,true);
-			Constants.PLAYER_CANNONBALLS.add(c);
+			Missle c = new Missle(player.getDamage(), player.getXCoor(), player.getYCoor(), Constants.PLAYER_MISSLE_BASE_SPEED, Constants.PLAYER_MISSLE_IMAGE,true);
+			Constants.PLAYER_MISSLES.add(c);
 		}
 	}
 	
 	public void collisionDetection(){
 		Plane p = (Plane) player;
-		for(int i=0;i<Constants.ENEMIES.size();i++){
+		for(int i=0; i<Constants.ENEMIES.size(); i++){
 			Plane enemy = (Plane) Constants.ENEMIES.get(i);
-			if(p.collidesWith(enemy)){
+			if (p.collidesWith(enemy)) {
 				p.collidedWith(enemy);
 				enemy.collidedWith(p);
 			}
 		}
-		for(Cannonball c:Constants.ENEMY_CANNONBALLS){
-			if(p.collidesWith(c)){
+		for (int i=0; i<Constants.ENEMY_MISSLES.size(); i++) {
+			Missle c = Constants.ENEMY_MISSLES.get(i);
+			if (p.collidesWith(c)) {
 				p.collidedWith(c);
 				c.collidedWith(p);
 			}
 		}
-		for(int i=0;i<Constants.ENEMIES.size();i++){
-			for(Cannonball c:Constants.PLAYER_CANNONBALLS){
+		for (int i=0; i<Constants.ENEMIES.size(); i++){
+			for (int j=0; j<Constants.PLAYER_MISSLES.size(); j++) {
+				Missle c = Constants.PLAYER_MISSLES.get(j);
 				Plane enemy = (Plane) Constants.ENEMIES.get(i);
-				if(enemy.collidesWith(c)){
+				if (enemy.collidesWith(c)) {
 					enemy.collidedWith(c);
 					c.collidedWith(enemy);
 				}
@@ -138,16 +137,19 @@ public class Game extends Canvas{
 			Graphics2D gfx = (Graphics2D) strat.getDrawGraphics();
 			gfx.fillRect(0, 0, Constants.GRID_X, Constants.GRID_Y);
 			gfx.drawImage(bg,0,0,null);
+			
 			for (int i=0; i<Constants.ENEMIES.size(); i++) {
 				Enemy e = Constants.ENEMIES.get(i);
 				e.update(change);
 				e.draw(gfx);
 			}
-			for(Cannonball c:Constants.PLAYER_CANNONBALLS){
+			for (int i=0; i<Constants.PLAYER_MISSLES.size(); i++) {
+				Missle c = Constants.PLAYER_MISSLES.get(i);
 				c.update(change);
 				c.draw(gfx);
 			}
-			for(Cannonball c:Constants.ENEMY_CANNONBALLS){
+			for (int i=0; i<Constants.ENEMY_MISSLES.size(); i++) {
+				Missle c = Constants.ENEMY_MISSLES.get(i);
 				c.update(change);
 				c.draw(gfx);
 			}

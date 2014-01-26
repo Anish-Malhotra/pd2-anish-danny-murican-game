@@ -25,7 +25,7 @@ public abstract class Plane {
 	
 	abstract public void update(long elapsedTime);
 	abstract void collidedWith(Plane other);
-	abstract void collidedWith(Cannonball other);
+	abstract void collidedWith(Missle other);
 	
 	public void loseHp(int amount) {
 		hp -= amount;
@@ -61,7 +61,7 @@ public abstract class Plane {
 		return bounds.intersects(other.bounds);
 	}
 	
-	public boolean collidesWith(Cannonball other) {
+	public boolean collidesWith(Missle other) {
 		this.bounds.setBounds((int)xCoor,(int)yCoor,sprite.getWidth(),sprite.getHeight());
 		other.bounds.setBounds((int)other.getXCoor(),(int)other.getYCoor(),other.sprite.getWidth(),other.sprite.getHeight());
 		return bounds.intersects(other.bounds);
