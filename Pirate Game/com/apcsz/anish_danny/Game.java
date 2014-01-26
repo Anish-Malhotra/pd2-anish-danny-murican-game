@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -57,15 +58,25 @@ initializeEnemies();
 		statsPanel.setLayout(layout);
 		for (int i=0; i<Constants.STATS.length; i++) {
 			statsPanel.add(new JLabel((String) Constants.STATS[i][0], JLabel.TRAILING));
-			JLabel value = new JLabel(Integer.toString((Integer) Constants.STATS[i][1]));
+			JLabel value;
+			if (i == Constants.STATS.length-1) {
+				value = new JLabel((String) Constants.STATS[i][1]);
+			}
+			else {
+				value = new JLabel(Integer.toString((Integer) Constants.STATS[i][1]));
+			}
 			statsPanel.add(value);
 			Constants.STATS_LABELS.add(value);
 		}
 		SpringUtilities.makeCompactGrid(statsPanel,
                 Constants.STATS.length, 2, //rows, cols
-                15, 6,        //initX, initY
-                15, 6);       //xPad, yPad
-		statsFrame.setBounds(0,0,statsPanel.getWidth(), statsPanel.getHeight());
+                20, 6,        //initX, initY
+                20, 6);       //xPad, yPad
+		BufferedImage insignia = ImageLoader.getImageLoader().getImage((String) Constants.RANKS[player.getRank()][2]);
+		JLabel img = new JLabel(new ImageIcon(insignia));
+		layout.putConstraint(SpringLayout.NORTH, img, 0, SpringLayout.SOUTH, statsPanel);
+		statsPanel.add(img);
+		statsFrame.setBounds(0,0,statsPanel.getWidth(), statsPanel.getHeight()+img.getHeight());
 		statsFrame.pack();
 		statsFrame.setLocation(Constants.GRID_X+10, 0);
 		
@@ -103,13 +114,15 @@ initializeEnemies();
 	}
 	
 	private void updateStats() {
-		if (Constants.STATS.length != 6) {System.out.println("Please update the stats!");}
+		if (Constants.STATS.length != 8) {System.out.println("Please update the stats!");}
 		Constants.STATS[0][1] = player.getMaxHp();
 		Constants.STATS[1][1] = player.getHp();
 		Constants.STATS[2][1] = player.getDamage();
 		Constants.STATS[3][1] = (int) player.getXCoor();
 		Constants.STATS[4][1] = (int) player.getYCoor();
 		Constants.STATS[5][1] = Constants.ENEMIES.size();
+		Constants.STATS[6][1] = Constants.player.getExp();
+		Constants.STATS[7][1] = Constants.RANKS[player.getRank()][0];
 	}
 
 	private void runGameLoop() {
@@ -151,7 +164,12 @@ initializeEnemies();
 			
 			updateStats();
 			for (int i=0; i<Constants.STATS.length; i++) {
-				Constants.STATS_LABELS.get(i).setText(Integer.toString((Integer) Constants.STATS[i][1]));
+				if (i == Constants.STATS.length-1) {
+					Constants.STATS_LABELS.get(i).setText((String) Constants.STATS[i][1]);
+				}
+				else {
+					Constants.STATS_LABELS.get(i).setText(Integer.toString((Integer) Constants.STATS[i][1]));
+				}
 			}
 
 			try { Thread.sleep(10); } catch (Exception e) {}

@@ -4,9 +4,12 @@ public class Player extends Plane {
 	
 	private static Player player = new Player();
 	private long lastFire = 0;
+	private int exp, rank;
 	
 	public Player() {
-		super(Constants.PLAYER_STARTING_HEALTH, Constants.PLAYER_STARTING_DAMAGE, 32, Constants.GRID_Y/2-16, Constants.PLAYER_STARTING_SPEED, Constants.PLAYER_IMAGE);
+		super(Constants.PLAYER_HEALTH, Constants.PLAYER_DAMAGE, 32, Constants.GRID_Y/2-16, Constants.PLAYER_SPEED, Constants.PLAYER_IMAGE);
+		this.exp = Constants.PLAYER_EXP;
+		this.rank = Constants.PLAYER_RANK;
 	}
 	
 	public static Player getPlayer() {
@@ -63,6 +66,14 @@ public class Player extends Plane {
 	public void destroy() {
 		System.out.println("You have died!");
 		System.exit(0);
+	}
+	
+	public int getExp() {
+		return exp;
+	}
+	
+	public int getRank() {
+		return rank;
 	}
 	
 }
