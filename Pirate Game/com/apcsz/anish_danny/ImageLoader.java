@@ -6,8 +6,6 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
-
-
 public class ImageLoader {
 	
 	private HashMap<String,BufferedImage> storedstoredSprites = new HashMap<String,BufferedImage>();

@@ -5,12 +5,13 @@ import java.util.Random;
 public class Enemy extends Plane {
 
 	Random r = new Random();
-	int angle;
+	int angle, shootFreq;
 	
 	public Enemy(int maxHp, int damage, double xCor, double yCor, double speed) {
 		super(maxHp, damage, xCor, yCor, speed, Constants.ENEMY_IMAGE);
 		Constants.ENEMIES.add(this);
 		angle = 90;
+		shootFreq = 30;
 	}
 
 	public void update(long elapsedTime){
@@ -20,23 +21,37 @@ public class Enemy extends Plane {
 		}
 		this.yCoor += (Constants.ENEMY_BASE_MOVE_SPEED * Math.sin(angle * Math.PI / 180));
 		angle++;
+		System.out.println(xCoor);
+		//System.out.println(yCoor);
 	}
 	
 	public void shoot(){
 		int check = r.nextInt(100);
-		if(check < 30){
-			Missle c = new Missle(this.getDamage(), this.xCoor, this.yCoor, this.speed, Constants.ENEMY_MISSLE_IMAGE, false);
-			Constants.ENEMY_MISSLES.add(c);
+		if (check < shootFreq){
+			EnemyMissile m = new EnemyMissile(this.getDamage(), this.xCoor, this.yCoor);
+			Constants.MISSILES.add(m);
 		}
 	}
 	
-	public void collidedWith(Plane other) {
-		//kamikaze pilot dies if he crashes into the player
-		Constants.ENEMIES.remove(this);
+	public boolean collide(Entity other) {
+		if (canCollide(other)) {
+			if (other instanceof PlayerMissile) {
+				loseHp(other.getDamage());
+				if (getHp() <= 0) {
+					destroy();
+				}
+				other.destroy();
+			}
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
-	public void collidedWith(Missle other) {
-		this.loseHp(other.getDamage());
+	public void destroy() {
+		Constants.ENEMIES.remove(this);
+		// Implement player rewards
 	}
 	
 }

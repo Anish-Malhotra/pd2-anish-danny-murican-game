@@ -14,15 +14,13 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class Game extends Canvas{
 	
+	public static Game g;
 	private JFrame frame;
 	private BufferStrategy strat;
 	private String message = "";
 	private BufferedImage bg;
-	protected static boolean leftPressed, rightPressed, upPressed, downPressed, spacePressed;
-	protected static long firingInterval = 450;
-	private long lastFire = 0;
+	protected boolean leftPressed, rightPressed, upPressed, downPressed, spacePressed;
 	Player player;
-
 	
 	public Game(){
 		frame = new JFrame("MURICAN Game!");
@@ -48,9 +46,17 @@ public class Game extends Canvas{
 		bg = ImageLoader.getImageLoader().getImage(Constants.BG_IMAGE);
 		player = Player.getPlayer();
 	}
+	
+	public static Game getGame() {
+		if (g == null) {
+			g = new Game();
+		}
+		return g;
+	}
 
 	public void initializeEnemies() {
-		int totalEnemies = Constants.LEVEL * 3;
+		Constants.ENEMIES.clear();
+		int totalEnemies = Constants.LEVEL * 1;
 		for (int i=0; i<totalEnemies; i++) {
 			int health = Constants.ENEMY_BASE_HEALTH * Constants.LEVEL;
 			int damage = Constants.ENEMY_BASE_DAMAGE * Constants.LEVEL;
@@ -61,19 +67,7 @@ public class Game extends Canvas{
 			Constants.ENEMIES.add(enemy);
 		}
 	}
-	
-	private void startGame() {
-		Constants.ENEMIES.clear();
-		initializeEnemies();
-		leftPressed = rightPressed = upPressed = downPressed = spacePressed = false;
-	}
-	
-	public void notifyEnemyDestroyed(Enemy enemy){
-		Constants.ENEMIES.remove(enemy);
-		if (Constants.ENEMIES.size() == 0) {
-			notifyClear();
-		}
-	}
+
 	private void notifyClear() {
 		if (Constants.LEVEL == 9) {
 			message = "You beat the game! You have stopped the Japanese attack!";
@@ -83,96 +77,65 @@ public class Game extends Canvas{
 		}
 	}
 	
-	public void shoot() {
-		if(Game.spacePressed){
-			if (System.currentTimeMillis() - lastFire < firingInterval) {
-				return;
-			}
-			lastFire = System.currentTimeMillis();
-			Missle c = new Missle(player.getDamage(), player.getXCoor(), player.getYCoor(), Constants.PLAYER_MISSLE_BASE_SPEED, Constants.PLAYER_MISSLE_IMAGE,true);
-			Constants.PLAYER_MISSLES.add(c);
-		}
-	}
-	
-	public void collisionDetection(){
-		Plane p = (Plane) player;
-		for(int i=0; i<Constants.ENEMIES.size(); i++){
-			Plane enemy = (Plane) Constants.ENEMIES.get(i);
-			if (p.collidesWith(enemy)) {
-				p.collidedWith(enemy);
-				enemy.collidedWith(p);
-			}
-		}
-		for (int i=0; i<Constants.ENEMY_MISSLES.size(); i++) {
-			Missle c = Constants.ENEMY_MISSLES.get(i);
-			if (p.collidesWith(c)) {
-				p.collidedWith(c);
-				c.collidedWith(p);
-			}
-		}
-		for (int i=0; i<Constants.ENEMIES.size(); i++){
-			for (int j=0; j<Constants.PLAYER_MISSLES.size(); j++) {
-				Missle c = Constants.PLAYER_MISSLES.get(j);
-				Plane enemy = (Plane) Constants.ENEMIES.get(i);
-				if (enemy.collidesWith(c)) {
-					enemy.collidedWith(c);
-					c.collidedWith(enemy);
-				}
+	public void collisionDetection() {
+		for (int i=0; i<Constants.ENEMIES.size(); i++) {
+			Enemy e = Constants.ENEMIES.get(i);
+			for (int j=0; j<Constants.MISSILES.size(); j++) {
+				e.collide(Constants.MISSILES.get(j));
 			}
 		}
 	}
 	
 	public static void main(String[] args) {
-		Game g = new Game();
-		g.runGameLoop();
+		getGame().runGameLoop();
 	}
 
 	private void runGameLoop() {
-		long initLoop = System.nanoTime();
+		long initLoop = System.currentTimeMillis();
 		long change;
 		while (Constants.STILL_PLAYING) {
-			change = System.nanoTime() - initLoop;
-			initLoop = System.nanoTime();
+			change = System.currentTimeMillis() - initLoop;
+			initLoop = System.currentTimeMillis();
 			
 			Graphics2D gfx = (Graphics2D) strat.getDrawGraphics();
 			gfx.fillRect(0, 0, Constants.GRID_X, Constants.GRID_Y);
 			gfx.drawImage(bg,0,0,null);
 			
+			for (int i=0; i<Constants.MISSILES.size(); i++) {
+				Missile m = Constants.MISSILES.get(i);
+				m.updateBounds();
+				player.collide(m);
+				m.update(change);
+				m.draw(gfx);
+			}
 			for (int i=0; i<Constants.ENEMIES.size(); i++) {
 				Enemy e = Constants.ENEMIES.get(i);
+				e.updateBounds();
+				player.collide(e);
+				for (int j=0; j<Constants.MISSILES.size(); j++) {
+					Missile m = Constants.MISSILES.get(j);
+					e.collide(m);
+				}
 				e.update(change);
 				e.draw(gfx);
 			}
-			for (int i=0; i<Constants.PLAYER_MISSLES.size(); i++) {
-				Missle c = Constants.PLAYER_MISSLES.get(i);
-				c.update(change);
-				c.draw(gfx);
-			}
-			for (int i=0; i<Constants.ENEMY_MISSLES.size(); i++) {
-				Missle c = Constants.ENEMY_MISSLES.get(i);
-				c.update(change);
-				c.draw(gfx);
-			}
 			player.update(change);
+			player.shoot();
 			player.draw(gfx);
-			
-			if(spacePressed){
-				shoot();
-			}
 			
 			collisionDetection();
 			
-			if(player.getHp() == 0){
-				System.exit(0);
+			if (player.getHp() == 0){
+				player.destroy();
 			}
 			
 			gfx.dispose();
 			strat.show();
 
-			try { Thread.sleep(10); } catch (Exception e) {}
+			try { Thread.sleep(100); } catch (Exception e) {}
 		}
 	}
-	
+
 	private class KeyListener extends KeyAdapter {
 		
 		public void keyPressed(KeyEvent e) {
@@ -220,5 +183,13 @@ public class Game extends Canvas{
 				// Pause
 			}
 		}
+	}
+	
+	public String toString() {
+		System.out.println("l" + leftPressed);
+		System.out.println("r" + rightPressed);
+		System.out.println("u" + upPressed);
+		System.out.println("d" + downPressed);
+		return "--";
 	}
 }
