@@ -32,14 +32,12 @@ public class Game extends Canvas{
 		panel.setLayout(null);
 		panel.add(this);
 		setBounds(0,0,Constants.GRID_X,Constants.GRID_Y);
-		panel.add(this);
 		setIgnoreRepaint(true);
 		frame.pack();
 		frame.setResizable(false);
 		frame.setVisible(true);
 		this.createBufferStrategy(2);
 		strat = getBufferStrategy();
-		Constants.STILL_PLAYING = true;
 		initializeEnemies();
 		leftPressed = rightPressed = upPressed = downPressed = spacePressed = false;
 		addKeyListener(new KeyListener());
@@ -64,7 +62,6 @@ public class Game extends Canvas{
 			double xCoor = Constants.GRID_X - 50;
 			double yCoor = Constants.GRID_Y / totalEnemies / 2 + Constants.GRID_Y / totalEnemies * i - 20;
 			Enemy enemy = new Enemy(health, damage, xCoor, yCoor, speed);
-			Constants.ENEMIES.add(enemy);
 		}
 	}
 
@@ -92,6 +89,9 @@ public class Game extends Canvas{
 			gfx.drawImage(bg,0,0,null);
 			
 			player.updateBounds();
+			player.update(change);
+			player.shoot();
+			player.draw(gfx);
 			for (int i=0; i<Constants.MISSILES.size(); i++) {
 				Missile m = Constants.MISSILES.get(i);
 				m.updateBounds();
@@ -111,9 +111,6 @@ public class Game extends Canvas{
 				e.update(change);
 				e.draw(gfx);
 			}
-			player.update(change);
-			player.shoot();
-			player.draw(gfx);
 						
 			if (player.getHp() == 0){
 				player.destroy();
