@@ -146,11 +146,6 @@ initializeEnemies();
 				e.update(change);
 				e.draw(gfx);
 			}
-						
-			if (player.getHp() == 0){
-				player.destroy();
-			}
-			
 			gfx.dispose();
 			strat.show();
 			

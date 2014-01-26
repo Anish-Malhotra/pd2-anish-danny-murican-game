@@ -10,13 +10,13 @@ public class Constants {
 	public static boolean STILL_PLAYING = true;
 	public static int LEVEL = 1;
 	
-	public static final int PLAYER_STARTING_HEALTH = 100;
+	public static final int PLAYER_STARTING_HEALTH = 1000000;
 	public static final int PLAYER_STARTING_DAMAGE = 1;
 	public static final int PLAYER_STARTING_SPEED = 156;
 	public static int PLAYER_FIRING_INTERVAL = 450;
 	public static double PLAYER_MISSILE_SPEED = 256;
 	
-	public static final int ENEMY_BASE_HEALTH = 10;
+	public static final int ENEMY_BASE_HEALTH = 1;
 	public static final int ENEMY_BASE_DAMAGE = 1;
 	public static final double ENEMY_BASE_MOVE_SPEED = .75;
 	public static final double ENEMY_MISSILE_BASE_SPEED = -256;

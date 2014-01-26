@@ -30,6 +30,9 @@ public class Player extends Plane {
 		if (Game.getGame().rightPressed && !(xCoor > Constants.GRID_X-sprite.getWidth())) {
 			xCoor += (timeElapsed * speed) / 1e3;
 		}
+		if (getHp() <= 0) {
+			destroy();
+		}
 	}
 
 	public void shoot() {
@@ -43,7 +46,7 @@ public class Player extends Plane {
 		if (canCollide(other)) {
 			// Enemy kamikaze pilot dies on crashing into player
 			if (other instanceof Enemy) {
-				this.loseHp(((Plane) other).getHp());
+				this.loseHp(((Enemy) other).getHp());
 				other.destroy();
 			}
 			else if (other instanceof EnemyMissile) {
