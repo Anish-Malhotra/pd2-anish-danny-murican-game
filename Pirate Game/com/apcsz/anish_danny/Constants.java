@@ -39,7 +39,7 @@ public class Constants {
 
 	public static final String ENEMY_IMAGE = "/resources/enemy.png";
 	public static final String PLAYER_IMAGE = "/resources/player.png";
-	public static final String BG_IMAGE = "/resources/bg.png";
+	public static final String BG_IMAGE = "/resources/bg2.png";
 	public static final String PLAYER_MISSILE_IMAGE = "/resources/playershot.png";
 	public static final String ENEMY_MISSILE_IMAGE = "/resources/enemyshot.png";
 	public static final String CLOUD_IMAGE = "/resources/cloud.png";
@@ -48,7 +48,7 @@ public class Constants {
 	
 	public static ArrayList<Enemy> ENEMIES = new ArrayList<Enemy>();
 	public static ArrayList<Missile> MISSILES = new ArrayList<Missile>();
-	public static ArrayList<Cloud> CLOUDS = new ArrayList<Clouds>();	
+	public static ArrayList<Cloud> CLOUDS = new ArrayList<Cloud>();	
 
 	static Player player = Player.getPlayer();
 	public static final Object[][] STATS = {
