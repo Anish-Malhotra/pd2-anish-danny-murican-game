@@ -34,7 +34,7 @@ public class Game extends Canvas{
 		gameFrame = new JFrame("MURICAN Game!");
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel gamePanel = (JPanel) gameFrame.getContentPane();
-		gamePanel.setPreferredSize(new Dimension(Constants.GRID_X, Constants.GRID_Y));
+		gamePanel.setPreferredSize(new Dimension(Constants.GRID_X-10, Constants.GRID_Y-10));
 		gamePanel.setLayout(null);
 		gamePanel.add(this);
 		setBounds(0,0,Constants.GRID_X,Constants.GRID_Y);
@@ -44,7 +44,7 @@ public class Game extends Canvas{
 		this.createBufferStrategy(2);
 		strat = getBufferStrategy();
 		
-initializeEnemies();
+		initializeEnemies();
 		leftPressed = rightPressed = upPressed = downPressed = spacePressed = false;
 		addKeyListener(new KeyListener());
 		bg = ImageLoader.getImageLoader().getImage(Constants.BG_IMAGE);
@@ -81,6 +81,9 @@ initializeEnemies();
 		
 		statsFrame.setVisible(true);
 		gameFrame.setVisible(true);
+		Constants.CLOUDS.add(new Cloud(Constants.CLOUD_IMAGE,100));
+		Constants.CLOUDS.add(new Cloud(Constants.CLOUD_IMAGE,300));
+		Constants.CLOUDS.add(new Cloud(Constants.CLOUD_IMAGE,500));
 	}
 	
 	public static Game getGame() {
@@ -158,6 +161,12 @@ initializeEnemies();
 				e.update(change);
 				e.draw(gfx);
 			}
+			for (int i=0; i<Constants.CLOUDS.size(); i++) {
+				Cloud c = Constants.CLOUDS.get(i);
+				c.update(change);
+				c.draw(gfx);
+			}
+			
 			gfx.dispose();
 			strat.show();
 			

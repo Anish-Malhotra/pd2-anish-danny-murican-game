@@ -42,10 +42,14 @@ public class Constants {
 	public static final String BG_IMAGE = "/resources/bg.png";
 	public static final String PLAYER_MISSILE_IMAGE = "/resources/playershot.png";
 	public static final String ENEMY_MISSILE_IMAGE = "/resources/enemyshot.png";
+	public static final String CLOUD_IMAGE = "/resources/cloud.png";
+
+	public static final double CLOUD_SPEED = 35.0;
 	
 	public static ArrayList<Enemy> ENEMIES = new ArrayList<Enemy>();
 	public static ArrayList<Missile> MISSILES = new ArrayList<Missile>();
-	
+	public static ArrayList<Cloud> CLOUDS = new ArrayList<Clouds>();	
+
 	static Player player = Player.getPlayer();
 	public static final Object[][] STATS = {
 		{"Max HP: ", player.getMaxHp()},
