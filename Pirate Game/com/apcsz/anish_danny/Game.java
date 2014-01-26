@@ -13,7 +13,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
-import javax.swing.SwingUtilities;
 
 @SuppressWarnings("serial")
 public class Game extends Canvas{
@@ -72,13 +71,13 @@ initializeEnemies();
                 Constants.STATS.length, 2, //rows, cols
                 20, 6,        //initX, initY
                 20, 6);       //xPad, yPad
-		BufferedImage insignia = ImageLoader.getImageLoader().getImage((String) Constants.RANKS[player.getRank()][2]);
-		JLabel img = new JLabel(new ImageIcon(insignia));
-		layout.putConstraint(SpringLayout.NORTH, img, 0, SpringLayout.SOUTH, statsPanel);
+		JLabel img = new JLabel(new ImageIcon(ImageLoader.getImageLoader().getImage((String) Constants.RANKS[player.getRank()][2])));
+		Constants.STATS_LABELS.add(img);
+		layout.putConstraint(SpringLayout.NORTH, img, -20, SpringLayout.SOUTH, statsFrame);
+		layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, img, (statsFrame.getWidth()-img.getWidth())/2, SpringLayout.HORIZONTAL_CENTER, statsFrame);
 		statsPanel.add(img);
-		statsFrame.setBounds(0,0,statsPanel.getWidth(), statsPanel.getHeight()+img.getHeight());
 		statsFrame.pack();
-		statsFrame.setLocation(Constants.GRID_X+10, 0);
+		statsFrame.setBounds(Constants.GRID_X+10, 0, statsFrame.getWidth(), statsFrame.getHeight()+img.getHeight()+20);
 		
 		statsFrame.setVisible(true);
 		gameFrame.setVisible(true);
@@ -170,6 +169,13 @@ initializeEnemies();
 				else {
 					Constants.STATS_LABELS.get(i).setText(Integer.toString((Integer) Constants.STATS[i][1]));
 				}
+			}
+			if (player.toRankUp) {
+				BufferedImage img = ImageLoader.getImageLoader().getImage((String) Constants.RANKS[player.getRank()][2]);
+				Constants.STATS_LABELS.get(Constants.STATS_LABELS.size()-1).setIcon(new ImageIcon(img));
+				statsFrame.pack();
+				statsFrame.setBounds(Constants.GRID_X+10, 0, statsFrame.getWidth(), statsFrame.getHeight()+img.getHeight()+20);
+				player.toRankUp = false;
 			}
 
 			try { Thread.sleep(10); } catch (Exception e) {}

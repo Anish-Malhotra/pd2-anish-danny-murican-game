@@ -5,6 +5,7 @@ public class Player extends Plane {
 	private static Player player = new Player();
 	private long lastFire = 0;
 	private int exp, rank;
+	protected boolean toRankUp = false;
 	
 	public Player() {
 		super(Constants.PLAYER_HEALTH, Constants.PLAYER_DAMAGE, 32, Constants.GRID_Y/2-16, Constants.PLAYER_SPEED, Constants.PLAYER_IMAGE);
@@ -36,12 +37,20 @@ public class Player extends Plane {
 		if (getHp() <= 0) {
 			destroy();
 		}
+		rankUp();
 	}
 
 	public void shoot() {
 		if (Game.getGame().spacePressed && !(System.currentTimeMillis() - lastFire < Constants.PLAYER_FIRING_INTERVAL)) {
 			lastFire = System.currentTimeMillis();
 			PlayerMissile m = new PlayerMissile(this.getDamage(), this.getXCoor(), this.getYCoor()+sprite.getHeight()/2);
+		}
+	}
+	
+	private void rankUp() {
+		if (this.rank < Constants.RANKS.length && exp > (Integer) Constants.RANKS[this.rank+1][1]) {
+			this.rank++;
+			toRankUp = true;
 		}
 	}
 

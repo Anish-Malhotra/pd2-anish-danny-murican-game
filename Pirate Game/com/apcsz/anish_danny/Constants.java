@@ -16,7 +16,7 @@ public class Constants {
 	public static int PLAYER_FIRING_INTERVAL = 450;
 	public static double PLAYER_MISSILE_SPEED = 256;
 	public static final int PLAYER_EXP = 0;
-	public static final int PLAYER_RANK = 0; // Corresponds to the index in the array below
+	public static final int PLAYER_RANK = 2; // Corresponds to the index in the array below
 	public static Object RANKS[][] = {
 		/* Title, Exp needed, Insignia image */
 		{"Tries to fly", 0, "/resources/01-Tries to fly.png"},
