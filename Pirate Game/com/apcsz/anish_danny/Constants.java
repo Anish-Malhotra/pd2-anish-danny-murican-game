@@ -18,7 +18,7 @@ public class Constants {
 	public static final int ENEMY_BASE_HEALTH = 1;
 	public static final int ENEMY_BASE_DAMAGE = 1;
 	public static final double ENEMY_BASE_MOVE_SPEED = 0.75;
-	public static final double ENEMY_MISSILE_BASE_SPEED = 256;
+	public static final double ENEMY_MISSILE_BASE_SPEED = -256;
 
 	public static final String ENEMY_IMAGE = "/resources/enemy.png";
 	public static final String PLAYER_IMAGE = "/resources/player.png";

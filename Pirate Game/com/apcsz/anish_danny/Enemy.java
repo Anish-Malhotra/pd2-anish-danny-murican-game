@@ -21,13 +21,11 @@ public class Enemy extends Plane {
 		}
 		this.yCoor += (Constants.ENEMY_BASE_MOVE_SPEED * Math.sin(angle * Math.PI / 180));
 		angle++;
-		System.out.println(xCoor);
-		//System.out.println(yCoor);
 	}
 	
 	public void shoot(){
 		int check = r.nextInt(100);
-		if (check < shootFreq){
+		if (check < shootFreq) {
 			EnemyMissile m = new EnemyMissile(this.getDamage(), this.xCoor, this.yCoor);
 			Constants.MISSILES.add(m);
 		}

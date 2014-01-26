@@ -56,7 +56,7 @@ public class Game extends Canvas{
 
 	public void initializeEnemies() {
 		Constants.ENEMIES.clear();
-		int totalEnemies = Constants.LEVEL * 1;
+		int totalEnemies = Constants.LEVEL * 3;
 		for (int i=0; i<totalEnemies; i++) {
 			int health = Constants.ENEMY_BASE_HEALTH * Constants.LEVEL;
 			int damage = Constants.ENEMY_BASE_DAMAGE * Constants.LEVEL;
@@ -76,16 +76,6 @@ public class Game extends Canvas{
 			message = "Wave " + Constants.LEVEL + " Completed.";
 		}
 	}
-	
-	public void collisionDetection() {
-		for (int i=0; i<Constants.ENEMIES.size(); i++) {
-			Enemy e = Constants.ENEMIES.get(i);
-			for (int j=0; j<Constants.MISSILES.size(); j++) {
-				e.collide(Constants.MISSILES.get(j));
-			}
-		}
-	}
-	
 	public static void main(String[] args) {
 		getGame().runGameLoop();
 	}
@@ -101,6 +91,7 @@ public class Game extends Canvas{
 			gfx.fillRect(0, 0, Constants.GRID_X, Constants.GRID_Y);
 			gfx.drawImage(bg,0,0,null);
 			
+			player.updateBounds();
 			for (int i=0; i<Constants.MISSILES.size(); i++) {
 				Missile m = Constants.MISSILES.get(i);
 				m.updateBounds();
@@ -112,6 +103,7 @@ public class Game extends Canvas{
 				Enemy e = Constants.ENEMIES.get(i);
 				e.updateBounds();
 				player.collide(e);
+				e.shoot();
 				for (int j=0; j<Constants.MISSILES.size(); j++) {
 					Missile m = Constants.MISSILES.get(j);
 					e.collide(m);
@@ -122,9 +114,7 @@ public class Game extends Canvas{
 			player.update(change);
 			player.shoot();
 			player.draw(gfx);
-			
-			collisionDetection();
-			
+						
 			if (player.getHp() == 0){
 				player.destroy();
 			}
@@ -132,7 +122,7 @@ public class Game extends Canvas{
 			gfx.dispose();
 			strat.show();
 
-			try { Thread.sleep(100); } catch (Exception e) {}
+			try { Thread.sleep(10); } catch (Exception e) {}
 		}
 	}
 
