@@ -10,12 +10,13 @@ public class Enemy extends Plane {
 	double shootFreq;
 	private Animation animation;
 	private double stateTime;
+	private boolean playerCollision = true;
 	
 	public Enemy(int maxHp, int damage, double xCor, double yCor, double speed,String ref) {
 		super(maxHp, damage, xCor, yCor, speed, ref);
 		Constants.ENEMIES.add(this);
 		angle = 90;
-		shootFreq = 1;
+		shootFreq = .75;
 		animation = new Animation(500, ImageLoader.getImageLoader().getImage(Constants.FRAME_1),
 									   ImageLoader.getImageLoader().getImage(Constants.FRAME_2),
 									   ImageLoader.getImageLoader().getImage(Constants.FRAME_3),
@@ -27,7 +28,7 @@ public class Enemy extends Plane {
 		stateTime += elapsedTime;
 		this.xCoor -= 1;
 		if (xCoor <= 0) {
-			xCoor = Constants.GRID_X + 32;
+			xCoor = Constants.GRID_X + sprite.getWidth();
 		}
 		this.yCoor += Constants.ENEMY_BASE_MOVE_SPEED * Math.sin(angle * Math.PI / 180);
 		angle++;
@@ -36,7 +37,7 @@ public class Enemy extends Plane {
 	public void shoot() {
 		int check = r.nextInt(100);
 		if (check < shootFreq) {
-			EnemyMissile m = new EnemyMissile(this.getDamage(), this.xCoor, this.yCoor+sprite.getHeight()/2,Constants.ENEMY_MISSILE_IMAGE);
+			EnemyMissile m = new EnemyMissile(this.getDamage(), this.xCoor, this.yCoor+sprite.getHeight()/2);
 		}
 	}
 	
@@ -45,6 +46,7 @@ public class Enemy extends Plane {
 			if (other instanceof PlayerMissile) {
 				loseHp(other.getDamage());
 				if (getHp() <= 0) {
+					playerCollision = false;
 					destroy();
 				}
 				other.destroy();
@@ -58,9 +60,7 @@ public class Enemy extends Plane {
 	
 	public void destroy() {
 		Constants.ENEMIES.remove(this);
-		// Implement player rewards
-		int reward = Constants.LEVEL;
-		Player.getPlayer().gainExp(reward);
+		Player.getPlayer().gainExp((!playerCollision)? Constants.LEVEL*5 : Constants.LEVEL*3);
 		for(BufferedImage frame:animation.frames){
 			Game.getGame().getGraphics().drawImage(animation.getFrame(stateTime),(int)this.xCoor,(int)this.yCoor,null);
 		}

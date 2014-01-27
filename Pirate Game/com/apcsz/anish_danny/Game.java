@@ -7,10 +7,12 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 
@@ -26,12 +28,13 @@ public class Game extends Canvas{
 	protected boolean leftPressed, rightPressed, upPressed, downPressed, spacePressed;
 	private KeyListener k = new KeyListener();
 	Player player;
+	Random r = new Random();
 	
 	public static void main(String[] args) {
 		getGame().runGameLoop();
 	}
 	
-	public Game(){
+	public Game() {
 		gameFrame = new JFrame("MURICAN Game!");
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel gamePanel = (JPanel) gameFrame.getContentPane();
@@ -99,12 +102,12 @@ public class Game extends Canvas{
 	}
 	
 	public void initializeEnemies() {
-		if(Constants.LEVEL == 6){
-			Boss boss = new Boss(Constants.BOSS_BASE_HEALTH,Constants.BOSS_BASE_DAMAGE,Constants.GRID_X-110,142,Constants.BOSS_BASE_MOVE_SPEED,Constants.BOSS_IMAGE);
+		if(Constants.LEVEL == Constants.BOSS_LEVEL){
+			Boss boss = new Boss(Constants.BOSS_BASE_HEALTH,Constants.BOSS_BASE_DAMAGE,Constants.GRID_X-110,142,Constants.BOSS_BASE_MOVE_SPEED);
 		}
 		else{	
 			Constants.ENEMIES.clear();
-			int totalEnemies = Constants.LEVEL * 3;
+			int totalEnemies = Constants.LEVEL * 2;
 			for (int i=0; i<totalEnemies; i++) {
 				int health = Constants.ENEMY_BASE_HEALTH * Constants.LEVEL;
 				int damage = Constants.ENEMY_BASE_DAMAGE * Constants.LEVEL;
@@ -117,25 +120,43 @@ public class Game extends Canvas{
 	}
 
 	private void notifyClear() {
-		if (Constants.LEVEL == 6) {
-			message = "You beat the game! You have stopped the Japanese attack!";
-		}
-		else {
-			message = "Wave " + Constants.LEVEL + " Completed.";
+		if (Constants.ENEMIES.size() == 0) {
+			removeKeyListener(k);
+			reset();
+			if (Constants.LEVEL == Constants.BOSS_LEVEL) {
+				message = "You beat the game! You have stopped the Japanese attack! President Obama is "
+						+ "\nimpressed with your efforts and has decided to award you with the "
+						+ "\nPresidential Medal of Honor. You should be proud of yourself!";
+				ImageIcon obama = new ImageIcon(ImageLoader.getImageLoader().getImage("/resources/Obama/Obama Thank You.jpg"));
+				JOptionPane.showMessageDialog(Player.getPlayer().playerFrame, null, "Destroyed the Japanese!", JOptionPane.INFORMATION_MESSAGE, obama);
+				JOptionPane.showMessageDialog(Player.getPlayer().playerFrame, message, "Destroyed the Japanese!", JOptionPane.INFORMATION_MESSAGE, null);
+				ImageIcon medal = new ImageIcon(ImageLoader.getImageLoader().getImage("/resources/Ranks/Medal of Honor.jpg"));
+				JOptionPane.showMessageDialog(Player.getPlayer().playerFrame, null, "Destroyed the Japanese!", JOptionPane.INFORMATION_MESSAGE, medal);
+				System.exit(0);
+			}
+			else {
+				message = "Wave " + Constants.LEVEL + " Completed. But... There's more!";
+				ImageIcon obama = new ImageIcon(ImageLoader.getImageLoader().getImage(Constants.OBAMA_PICS[r.nextInt(Constants.OBAMA_PICS.length)]));
+				JOptionPane.showMessageDialog(gameFrame, message, "Wave Complete!", JOptionPane.INFORMATION_MESSAGE, obama);
+			}
+			Constants.LEVEL++;
+			initializeEnemies();
+			addKeyListener(k);
 		}
 	}
 	
 	private void updateStats() {
-		if (Constants.STATS.length != 9) {System.out.println("Please update the stats!");} // For debugging purposes
+		if (Constants.STATS.length != 10) {System.out.println("Please update the stats!");} // For debugging purposes
 		Constants.STATS[0][1] = player.getMaxHp() + "";
 		Constants.STATS[1][1] = player.getHp() + "";
 		Constants.STATS[2][1] = player.getDamage() + "";
 		Constants.STATS[3][1] = player.speed + " mph";
 		Constants.STATS[4][1] = (int) player.getXCoor() + "";
 		Constants.STATS[5][1] = (int) player.getYCoor() + "";
-		Constants.STATS[6][1] = Constants.ENEMIES.size() + "";
-		Constants.STATS[7][1] = Constants.player.getExp() + "";
-		Constants.STATS[8][1] = (String) Constants.RANKS[player.getRank()][0];
+		Constants.STATS[6][1] = Constants.LEVEL + "";
+		Constants.STATS[7][1] = Constants.ENEMIES.size() + "";
+		Constants.STATS[8][1] = Constants.player.getExp() + "";
+		Constants.STATS[9][1] = (String) Constants.RANKS[player.getRank()][0];
 	}
 
 	private void runGameLoop() {
@@ -149,10 +170,28 @@ public class Game extends Canvas{
 			gfx.fillRect(0, 0, Constants.GRID_X, Constants.GRID_Y);
 			gfx.drawImage(bg,0,0,null);
 			
+			updateStats();
+			for (int i=0; i<Constants.STATS.length; i++) {
+					Constants.STATS_LABELS.get(i).setText((String) Constants.STATS[i][1]);
+			}
+			if (player.toRankUp) {
+				BufferedImage img = ImageLoader.getImageLoader().getImage((String) Constants.RANKS[player.getRank()][2]);
+				Constants.STATS_LABELS.get(Constants.STATS_LABELS.size()-1).setIcon(new ImageIcon(img));
+				statsFrame.pack();
+				statsFrame.setBounds(Constants.GRID_X+10, 0, statsFrame.getWidth(), statsFrame.getHeight()+img.getHeight()+20);
+				removeKeyListener(k);
+				reset();
+				player.upgradeStats();
+				addKeyListener(k);
+			}
+			
 			player.updateBounds();
 			player.update(change);
 			player.shoot();
 			player.draw(gfx);
+			
+			notifyClear();
+			
 			for (int i=0; i<Constants.MISSILES.size(); i++) {
 				Missile m = Constants.MISSILES.get(i);
 				m.updateBounds();
@@ -181,21 +220,6 @@ public class Game extends Canvas{
 			gfx.dispose();
 			strat.show();
 			
-			updateStats();
-			for (int i=0; i<Constants.STATS.length; i++) {
-					Constants.STATS_LABELS.get(i).setText((String) Constants.STATS[i][1]);
-			}
-			if (player.toRankUp) {
-				BufferedImage img = ImageLoader.getImageLoader().getImage((String) Constants.RANKS[player.getRank()][2]);
-				Constants.STATS_LABELS.get(Constants.STATS_LABELS.size()-1).setIcon(new ImageIcon(img));
-				statsFrame.pack();
-				statsFrame.setBounds(Constants.GRID_X+10, 0, statsFrame.getWidth(), statsFrame.getHeight()+img.getHeight()+20);
-				removeKeyListener(k);
-				reset();
-				player.upgradeStats();
-				addKeyListener(k);
-			}
-
 			try { Thread.sleep(10); } catch (Exception e) {}
 		}
 	}
@@ -251,6 +275,7 @@ public class Game extends Canvas{
 	
 	protected void reset() {
 		leftPressed = rightPressed = upPressed = downPressed = spacePressed = false;
+		Constants.MISSILES.clear();
 	}
 	
 	public String toString() {

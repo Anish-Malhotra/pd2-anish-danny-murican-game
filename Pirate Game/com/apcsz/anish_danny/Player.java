@@ -8,7 +8,7 @@ public class Player extends Plane {
 	
 	private static Player player;
 	protected String playerName;
-	private static JFrame playerFrame;
+	protected static JFrame playerFrame;
 	private long lastFire = 0;
 	private int exp, rank;
 	protected boolean toRankUp = false;
@@ -17,7 +17,7 @@ public class Player extends Plane {
 		super(Constants.PLAYER_HEALTH, Constants.PLAYER_DAMAGE, 32, Constants.GRID_Y/2-16, Constants.PLAYER_SPEED, Constants.PLAYER_IMAGE);
 		this.exp = Constants.PLAYER_EXP;
 		this.rank = Constants.PLAYER_RANK;
-		this.playerName = (playerName == null) ? "Mr.Zamansky" : playerName;
+		this.playerName = (playerName == null || playerName.equals("")) ? "Mr.Zamansky" : playerName;
 	}
 	
 	public static Player getPlayer() {
@@ -92,14 +92,16 @@ public class Player extends Plane {
 		ImageIcon plane = new ImageIcon(ImageLoader.getImageLoader().getImage(Constants.PLAYER_IMAGE));
 		Object[] upgradeOptions = {"Engine (Speed)", "Guns (Damage)", "Hull (Health)"};
 		int choice = JOptionPane.showOptionDialog(playerFrame, "What would you like to upgrade?", "Upgrade your plane", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, plane, upgradeOptions, null);
+		int multiplier = ((int) Math.sqrt(10 - Constants.LEVEL) + rank);
 		if (choice == 0) {
-			speed += Constants.LEVEL_UP_SPEED;
+			speed += Constants.LEVEL_UP_SPEED * multiplier;
 		}
 		else if (choice == 1) {
-			increaseDamage(Constants.LEVEL_UP_DAMAGE);
+			increaseDamage(Constants.LEVEL_UP_DAMAGE * multiplier);
+			Constants.PLAYER_FIRING_INTERVAL += Constants.LEVEL_UP_FIRE_INTERVAL;
 		}
 		else {
-			increaseMaxHp(Constants.LEVEL_UP_HEALTH);
+			increaseMaxHp(Constants.LEVEL_UP_HEALTH * multiplier);
 		}
 		toRankUp = false;
 	}
@@ -111,9 +113,11 @@ public class Player extends Plane {
 				this.loseHp(((Enemy) other).getHp());
 				other.destroy();
 			}
-			else if (other instanceof EnemyMissile) {
+			else if (other instanceof EnemyMissile || other instanceof BossMissile) {
 				this.loseHp(other.getDamage());
-				other.destroy();
+				if (!(this.getHp() <= 0)) {
+					other.destroy();
+				}
 			}
 			return true;
 		}
@@ -123,7 +127,7 @@ public class Player extends Plane {
 	}
 	
 	public void destroy() {
-		System.out.println("You have died!");
+		JOptionPane.showMessageDialog(playerFrame, "What a shame! You have died! We think it's time to let someone\nmore qualified to battle the Japanese.", "The End?", JOptionPane.ERROR_MESSAGE);
 		System.exit(0);
 	}
 	
