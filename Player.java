@@ -26,6 +26,7 @@ public class Player extends Plane {
 			playerFrame.setVisible(false);
 			String name = (String) JOptionPane.showInputDialog(playerFrame, "Sir, what is your name?", "Welcome!", JOptionPane.PLAIN_MESSAGE, null, null, null);
 			player = new Player(name);
+			JOptionPane.showMessageDialog(playerFrame, "Use the arrow keys to control airplane movement and the space bar to shoot.\nGood Luck!", "Instructions", JOptionPane.INFORMATION_MESSAGE, null);
 		}
 		return player;
 	}
