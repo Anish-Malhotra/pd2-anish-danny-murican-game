@@ -21,6 +21,10 @@ public abstract class Entity {
 		this.bounds = new Rectangle((int)this.xCoor, (int)this.yCoor, this.sprite.getWidth(), this.sprite.getHeight());
 	}
 	
+	protected void increaseDamage(int amount) {
+		damage += amount;
+	}
+	
 	public double getXCoor() {
 		return xCoor;
 	}

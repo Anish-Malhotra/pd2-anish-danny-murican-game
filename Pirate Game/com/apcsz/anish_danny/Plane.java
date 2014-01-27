@@ -9,6 +9,10 @@ public abstract class Plane extends Entity {
 		this.maxHp = maxHp;
 		this.hp = maxHp;
 	}
+	
+	public void increaseMaxHp(int amount) {
+		maxHp += amount;
+	}
 		
 	public void loseHp(int amount) {
 		hp -= amount;

@@ -50,6 +50,8 @@ public class Enemy extends Plane {
 	public void destroy() {
 		Constants.ENEMIES.remove(this);
 		// Implement player rewards
+		int reward = Constants.LEVEL;
+		Player.getPlayer().gainExp(reward);
 	}
 	
 }

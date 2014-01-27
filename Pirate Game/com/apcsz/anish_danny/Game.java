@@ -18,8 +18,8 @@ import javax.swing.SpringLayout;
 public class Game extends Canvas{
 	
 	public static Game g;
-	private JFrame gameFrame;
-	private JFrame statsFrame;
+	protected JFrame gameFrame;
+	protected JFrame statsFrame;
 	private BufferStrategy strat;
 	private String message = "";
 	private BufferedImage bg;
@@ -50,7 +50,7 @@ public class Game extends Canvas{
 		bg = ImageLoader.getImageLoader().getImage(Constants.BG_IMAGE);
 		player = Player.getPlayer();
 		
-		statsFrame = new JFrame("YO STATS");
+		statsFrame = new JFrame(Player.getPlayer().playerName);
 		statsFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		JPanel statsPanel = (JPanel) statsFrame.getContentPane();
 		SpringLayout layout = new SpringLayout();
@@ -62,7 +62,7 @@ public class Game extends Canvas{
 				value = new JLabel((String) Constants.STATS[i][1]);
 			}
 			else {
-				value = new JLabel(Integer.toString((Integer) Constants.STATS[i][1]));
+				value = new JLabel(Constants.STATS[i][1]);
 			}
 			statsPanel.add(value);
 			Constants.STATS_LABELS.add(value);
@@ -116,15 +116,16 @@ public class Game extends Canvas{
 	}
 	
 	private void updateStats() {
-		if (Constants.STATS.length != 8) {System.out.println("Please update the stats!");}
-		Constants.STATS[0][1] = player.getMaxHp();
-		Constants.STATS[1][1] = player.getHp();
-		Constants.STATS[2][1] = player.getDamage();
-		Constants.STATS[3][1] = (int) player.getXCoor();
-		Constants.STATS[4][1] = (int) player.getYCoor();
-		Constants.STATS[5][1] = Constants.ENEMIES.size();
-		Constants.STATS[6][1] = Constants.player.getExp();
-		Constants.STATS[7][1] = Constants.RANKS[player.getRank()][0];
+		if (Constants.STATS.length != 9) {System.out.println("Please update the stats!");} // For debugging purposes
+		Constants.STATS[0][1] = player.getMaxHp() + "";
+		Constants.STATS[1][1] = player.getHp() + "";
+		Constants.STATS[2][1] = player.getDamage() + "";
+		Constants.STATS[3][1] = player.speed + " mph";
+		Constants.STATS[4][1] = (int) player.getXCoor() + "";
+		Constants.STATS[5][1] = (int) player.getYCoor() + "";
+		Constants.STATS[6][1] = Constants.ENEMIES.size() + "";
+		Constants.STATS[7][1] = Constants.player.getExp() + "";
+		Constants.STATS[8][1] = (String) Constants.RANKS[player.getRank()][0];
 	}
 
 	private void runGameLoop() {
@@ -172,19 +173,14 @@ public class Game extends Canvas{
 			
 			updateStats();
 			for (int i=0; i<Constants.STATS.length; i++) {
-				if (i == Constants.STATS.length-1) {
 					Constants.STATS_LABELS.get(i).setText((String) Constants.STATS[i][1]);
-				}
-				else {
-					Constants.STATS_LABELS.get(i).setText(Integer.toString((Integer) Constants.STATS[i][1]));
-				}
 			}
 			if (player.toRankUp) {
 				BufferedImage img = ImageLoader.getImageLoader().getImage((String) Constants.RANKS[player.getRank()][2]);
 				Constants.STATS_LABELS.get(Constants.STATS_LABELS.size()-1).setIcon(new ImageIcon(img));
 				statsFrame.pack();
 				statsFrame.setBounds(Constants.GRID_X+10, 0, statsFrame.getWidth(), statsFrame.getHeight()+img.getHeight()+20);
-				player.toRankUp = false;
+				player.upgradeStats();
 			}
 
 			try { Thread.sleep(10); } catch (Exception e) {}
