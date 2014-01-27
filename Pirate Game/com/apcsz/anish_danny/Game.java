@@ -24,6 +24,7 @@ public class Game extends Canvas{
 	private String message = "";
 	private BufferedImage bg;
 	protected boolean leftPressed, rightPressed, upPressed, downPressed, spacePressed;
+	private KeyListener k = new KeyListener();
 	Player player;
 	
 	public static void main(String[] args) {
@@ -45,8 +46,8 @@ public class Game extends Canvas{
 		strat = getBufferStrategy();
 		
 		initializeEnemies();
-		leftPressed = rightPressed = upPressed = downPressed = spacePressed = false;
-		addKeyListener(new KeyListener());
+		reset();
+		addKeyListener(k);
 		bg = ImageLoader.getImageLoader().getImage(Constants.BG_IMAGE);
 		player = Player.getPlayer();
 		
@@ -189,7 +190,10 @@ public class Game extends Canvas{
 				Constants.STATS_LABELS.get(Constants.STATS_LABELS.size()-1).setIcon(new ImageIcon(img));
 				statsFrame.pack();
 				statsFrame.setBounds(Constants.GRID_X+10, 0, statsFrame.getWidth(), statsFrame.getHeight()+img.getHeight()+20);
+				removeKeyListener(k);
+				reset();
 				player.upgradeStats();
+				addKeyListener(k);
 			}
 
 			try { Thread.sleep(10); } catch (Exception e) {}
@@ -243,6 +247,10 @@ public class Game extends Canvas{
 				// Pause
 			}
 		}
+	}
+	
+	protected void reset() {
+		leftPressed = rightPressed = upPressed = downPressed = spacePressed = false;
 	}
 	
 	public String toString() {
