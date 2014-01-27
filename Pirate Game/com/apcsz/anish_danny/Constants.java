@@ -8,10 +8,10 @@ public class Constants {
 	public static final int GRID_X = 640;
 	public static final int GRID_Y = 480;
 	public static boolean STILL_PLAYING = true;
-	public static int LEVEL = 300;
-	public static final int LEVEL_UP_HEALTH = 0;
-	public static final int LEVEL_UP_DAMAGE = 0;
-	public static final double LEVEL_UP_SPEED = 0;
+	public static int LEVEL = 10;
+	public static final int LEVEL_UP_HEALTH = 1;
+	public static final int LEVEL_UP_DAMAGE = 1;
+	public static final double LEVEL_UP_SPEED = 1;
 	
 	public static final int PLAYER_HEALTH = 1000000;
 	public static final int PLAYER_DAMAGE = 1;

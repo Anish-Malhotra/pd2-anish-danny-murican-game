@@ -33,17 +33,37 @@ public class Player extends Plane {
 		
 	public void update(long timeElapsed) {
 		//System.out.println(Game.getGame());
-		if (Game.getGame().upPressed && !(yCoor <= 0)) {
-			yCoor -= (timeElapsed * speed) / 1e3;
+		if (Game.getGame().upPressed) {
+			if (!(yCoor <= 0)) {
+				yCoor -= (timeElapsed * speed) / 1e3;
+			}
+			else {
+				yCoor = 0;
+			}
 		}
-		if (Game.getGame().downPressed && !(yCoor > Constants.GRID_Y-sprite.getHeight())) {
-			yCoor += (timeElapsed * speed) / 1e3;
+		if (Game.getGame().downPressed) {
+			if (!(yCoor > Constants.GRID_Y-sprite.getHeight())) {
+				yCoor += (timeElapsed * speed) / 1e3;
+			}
+			else {
+				yCoor = Constants.GRID_Y-sprite.getHeight();
+			}
 		}
-		if (Game.getGame().leftPressed && !(xCoor <= 0)) {
-			xCoor -= (timeElapsed * speed) / 1e3;
+		if (Game.getGame().leftPressed) {
+			if (!(xCoor <= 0)) {
+				xCoor -= (timeElapsed * speed) / 1e3;
+			}
+			else {
+				xCoor = 0;
+			}
 		}
-		if (Game.getGame().rightPressed && !(xCoor > Constants.GRID_X-sprite.getWidth())) {
-			xCoor += (timeElapsed * speed) / 1e3;
+		if (Game.getGame().rightPressed) {
+			if (!(xCoor > Constants.GRID_X-sprite.getWidth())) {
+				xCoor += (timeElapsed * speed) / 1e3;
+			}
+			else {
+				xCoor = Constants.GRID_X-sprite.getWidth();
+			}
 		}
 		if (getHp() <= 0) {
 			destroy();
