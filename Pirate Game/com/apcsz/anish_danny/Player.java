@@ -66,7 +66,7 @@ public class Player extends Plane {
 	}
 	
 	public void upgradeStats() {
-		ImageIcon obama = new ImageIcon(ImageLoader.getImageLoader().getImage("/resources/Barack Obama.jpg"));
+		ImageIcon obama = new ImageIcon(ImageLoader.getImageLoader().getImage("/resources/Obama/Barack Obama.jpg"));
 		String message = "Congratulations " + playerName + ".\nYou are now a " + Constants.RANKS[getRank()][0] + ".";
 		JOptionPane.showMessageDialog(Game.getGame().gameFrame, message, "Congratulations!", JOptionPane.INFORMATION_MESSAGE, obama);
 		ImageIcon plane = new ImageIcon(ImageLoader.getImageLoader().getImage(Constants.PLAYER_IMAGE));

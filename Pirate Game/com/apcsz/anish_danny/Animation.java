@@ -3,7 +3,7 @@ package com.apcsz.anish_danny;
 import java.awt.image.BufferedImage;
 
 public class Animation {
-	private BufferedImage[] frames;
+	protected BufferedImage[] frames;
 	private double frameDuration;
 	
 	public Animation(double frameDuration, BufferedImage... frames){
@@ -11,7 +11,7 @@ public class Animation {
 		this.frames = frames;
 	}
 	
-	public BufferedImage getFrame(double stateTime, int mode){
+	public BufferedImage getFrame(double stateTime){
 		 int frameNumber = (int) (stateTime / frameDuration);
          frameNumber %= frames.length;
          return frames[frameNumber];

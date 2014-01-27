@@ -1,5 +1,6 @@
 package com.apcsz.anish_danny;
 
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class Enemy extends Plane {
@@ -7,15 +8,23 @@ public class Enemy extends Plane {
 	Random r = new Random();
 	int angle;
 	double shootFreq;
+	private Animation animation;
+	private double stateTime;
 	
-	public Enemy(int maxHp, int damage, double xCor, double yCor, double speed) {
-		super(maxHp, damage, xCor, yCor, speed, Constants.ENEMY_IMAGE);
+	public Enemy(int maxHp, int damage, double xCor, double yCor, double speed,String ref) {
+		super(maxHp, damage, xCor, yCor, speed, ref);
 		Constants.ENEMIES.add(this);
 		angle = 90;
 		shootFreq = 1;
+		animation = new Animation(500, ImageLoader.getImageLoader().getImage(Constants.FRAME_1),
+									   ImageLoader.getImageLoader().getImage(Constants.FRAME_2),
+									   ImageLoader.getImageLoader().getImage(Constants.FRAME_3),
+									   ImageLoader.getImageLoader().getImage(Constants.FRAME_4),
+									   ImageLoader.getImageLoader().getImage(Constants.FRAME_5));
 	}
 
 	public void update(long elapsedTime){
+		stateTime += elapsedTime;
 		this.xCoor -= 1;
 		if (xCoor <= 0) {
 			xCoor = Constants.GRID_X + 32;
@@ -27,7 +36,7 @@ public class Enemy extends Plane {
 	public void shoot() {
 		int check = r.nextInt(100);
 		if (check < shootFreq) {
-			EnemyMissile m = new EnemyMissile(this.getDamage(), this.xCoor, this.yCoor+sprite.getHeight()/2);
+			EnemyMissile m = new EnemyMissile(this.getDamage(), this.xCoor, this.yCoor+sprite.getHeight()/2,Constants.ENEMY_MISSILE_IMAGE);
 		}
 	}
 	
@@ -52,6 +61,9 @@ public class Enemy extends Plane {
 		// Implement player rewards
 		int reward = Constants.LEVEL;
 		Player.getPlayer().gainExp(reward);
+		for(BufferedImage frame:animation.frames){
+			Game.getGame().getGraphics().drawImage(animation.getFrame(stateTime),(int)this.xCoor,(int)this.yCoor,null);
+		}
 	}
 	
 }

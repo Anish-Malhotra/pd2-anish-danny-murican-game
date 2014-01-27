@@ -92,22 +92,31 @@ public class Game extends Canvas{
 		}
 		return g;
 	}
-
+	
+	public Graphics2D getGraphics() {
+		return (Graphics2D) strat.getDrawGraphics();
+	}
+	
 	public void initializeEnemies() {
-		Constants.ENEMIES.clear();
-		int totalEnemies = Constants.LEVEL * 3;
-		for (int i=0; i<totalEnemies; i++) {
-			int health = Constants.ENEMY_BASE_HEALTH * Constants.LEVEL;
-			int damage = Constants.ENEMY_BASE_DAMAGE * Constants.LEVEL;
-			double speed = Constants.ENEMY_BASE_MOVE_SPEED * Constants.LEVEL;
-			double xCoor = Constants.GRID_X - 50;
-			double yCoor = Constants.GRID_Y / totalEnemies / 2 + Constants.GRID_Y / totalEnemies * i - 20;
-			Enemy enemy = new Enemy(health, damage, xCoor, yCoor, speed);
+		if(Constants.LEVEL == 6){
+			Boss boss = new Boss(Constants.BOSS_BASE_HEALTH,Constants.BOSS_BASE_DAMAGE,Constants.GRID_X-110,142,Constants.BOSS_BASE_MOVE_SPEED,Constants.BOSS_IMAGE);
+		}
+		else{	
+			Constants.ENEMIES.clear();
+			int totalEnemies = Constants.LEVEL * 3;
+			for (int i=0; i<totalEnemies; i++) {
+				int health = Constants.ENEMY_BASE_HEALTH * Constants.LEVEL;
+				int damage = Constants.ENEMY_BASE_DAMAGE * Constants.LEVEL;
+				double speed = Constants.ENEMY_BASE_MOVE_SPEED * Constants.LEVEL;
+				double xCoor = Constants.GRID_X - 50;
+				double yCoor = Constants.GRID_Y / totalEnemies / 2 + Constants.GRID_Y / totalEnemies * i - 20;
+				Enemy enemy = new Enemy(health, damage, xCoor, yCoor, speed,Constants.ENEMY_IMAGE);
+			}
 		}
 	}
 
 	private void notifyClear() {
-		if (Constants.LEVEL == 9) {
+		if (Constants.LEVEL == 6) {
 			message = "You beat the game! You have stopped the Japanese attack!";
 		}
 		else {
