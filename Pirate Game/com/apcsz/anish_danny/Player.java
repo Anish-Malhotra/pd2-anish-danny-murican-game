@@ -74,7 +74,7 @@ public class Player extends Plane {
 	public void shoot() {
 		if (Game.getGame().spacePressed && !(System.currentTimeMillis() - lastFire < Constants.PLAYER_FIRING_INTERVAL)) {
 			lastFire = System.currentTimeMillis();
-			PlayerMissile m = new PlayerMissile(this.getDamage(), this.getXCoor(), this.getYCoor()+sprite.getHeight()/2);
+			new PlayerMissile(this.getDamage(), this.getXCoor(), this.getYCoor()+sprite.getHeight()/2);
 		}
 	}
 	

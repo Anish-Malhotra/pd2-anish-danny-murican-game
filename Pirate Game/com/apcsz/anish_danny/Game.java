@@ -103,7 +103,7 @@ public class Game extends Canvas{
 	
 	public void initializeEnemies() {
 		if(Constants.LEVEL == Constants.BOSS_LEVEL){
-			Boss boss = new Boss(Constants.BOSS_BASE_HEALTH,Constants.BOSS_BASE_DAMAGE,Constants.GRID_X-110,142,Constants.BOSS_BASE_MOVE_SPEED);
+			new Boss(Constants.BOSS_BASE_HEALTH,Constants.BOSS_BASE_DAMAGE,Constants.GRID_X-110,142,Constants.BOSS_BASE_MOVE_SPEED);
 		}
 		else{	
 			Constants.ENEMIES.clear();
@@ -114,7 +114,7 @@ public class Game extends Canvas{
 				double speed = Constants.ENEMY_BASE_MOVE_SPEED * Constants.LEVEL;
 				double xCoor = Constants.GRID_X - 50;
 				double yCoor = Constants.GRID_Y / totalEnemies / 2 + Constants.GRID_Y / totalEnemies * i - 20;
-				Enemy enemy = new Enemy(health, damage, xCoor, yCoor, speed,Constants.ENEMY_IMAGE);
+				new Enemy(health, damage, xCoor, yCoor, speed,Constants.ENEMY_IMAGE);
 			}
 		}
 	}
@@ -128,10 +128,10 @@ public class Game extends Canvas{
 						+ "\nimpressed with your efforts and has decided to award you with the "
 						+ "\nPresidential Medal of Honor. You should be proud of yourself!";
 				ImageIcon obama = new ImageIcon(ImageLoader.getImageLoader().getImage("/resources/Obama/Obama Thank You.jpg"));
-				JOptionPane.showMessageDialog(Player.getPlayer().playerFrame, null, "Destroyed the Japanese!", JOptionPane.INFORMATION_MESSAGE, obama);
-				JOptionPane.showMessageDialog(Player.getPlayer().playerFrame, message, "Destroyed the Japanese!", JOptionPane.INFORMATION_MESSAGE, null);
+				JOptionPane.showMessageDialog(Player.playerFrame, null, "Destroyed the Japanese!", JOptionPane.INFORMATION_MESSAGE, obama);
+				JOptionPane.showMessageDialog(Player.playerFrame, message, "Destroyed the Japanese!", JOptionPane.INFORMATION_MESSAGE, null);
 				ImageIcon medal = new ImageIcon(ImageLoader.getImageLoader().getImage("/resources/Ranks/Medal of Honor.jpg"));
-				JOptionPane.showMessageDialog(Player.getPlayer().playerFrame, null, "Destroyed the Japanese!", JOptionPane.INFORMATION_MESSAGE, medal);
+				JOptionPane.showMessageDialog(Player.playerFrame, null, "Destroyed the Japanese!", JOptionPane.INFORMATION_MESSAGE, medal);
 				System.exit(0);
 			}
 			else {
